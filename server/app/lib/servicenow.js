@@ -67,6 +67,43 @@ var CMDBConfigSchema = new mongoose.Schema({
     }
 });
 
+CMDBConfigSchema.methods.postCatalogitem = function(blueprintData,postData, callback) {  
+    var username = postData[0].servicenowusername;
+    var password = postData[0].servicenowpassword;
+    var tmp = postData[0].url;
+    var tableName = 'sc_cat_item';
+    var host = tmp.replace(/.*?:\/\//g, "");
+    var url = host.split('/');
+    var requestURL = 'https://'+url[0]+'/api/now/table/sc_cat_item';
+    var requestBody = {
+        "name": blueprintData.name,
+        "category":"279a530cdbe212008dc05c00cf9619db",
+        "sc_catalogs":"3ebf7284dbe212008dc05c00cf9619ae",
+        "short_description":blueprintData.name +" is availbale.Blueprint-Id -( "+blueprintData._id+" )",
+        "workflow":"8fb38946db2212008dc05c00cf96197a",
+        "active":"true"
+    };
+    var options = {
+        url: requestURL,
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json',
+            'Accept': 'application/json',
+            "Authorization": "Basic " + new Buffer(username + ":" + password).toString('base64')      
+        },
+        'body' : requestBody,
+        'json':true
+        
+    };
+
+    request(options, function(error, response, body) {
+        if (!error && response.statusCode == 201) {
+            logger.debug("success");
+        } else {
+            logger.error("Error",error);
+        }
+    });
+};
 
 CMDBConfigSchema.statics.getCMDBServerById = function(serverId, callback) {
 
@@ -131,6 +168,7 @@ CMDBConfigSchema.statics.getCMDBList = function(callback) {
             return;
         }
         callback(null, data);
+
     });
 }
 

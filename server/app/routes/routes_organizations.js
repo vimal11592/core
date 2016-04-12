@@ -41,6 +41,7 @@ var Task = require('../model/classes/tasks/tasks.js');
 var masterUtil = require('../lib/utils/masterUtil.js');
 var CloudFormation = require('_pr/model/cloud-formation');
 var AzureArm = require('_pr/model/azure-arm');
+var ServiceNow = require('_pr/lib/servicenow.js')
 
 module.exports.setRoutes = function(app, sessionVerification) {
 
@@ -915,10 +916,29 @@ module.exports.setRoutes = function(app, sessionVerification) {
 						message: "DB error"
 					});
 					return;
-				}
-
+				}				
 				res.send(data);
+				ServiceNow.getCMDBList(function(err,serviceNows){
+					if(err) {
+						logger.error(err);
+						return;
+	                }
+	                if(serviceNows.length){
+	                	serviceNows[0].postCatalogitem(data,serviceNows,function(err,resData){
+	                		if(err) {
+								logger.error(err);
+								return;
+	                		}
+	                		logger.debug("done ==>",resData);
+	                	});
+	                } else {
+	                	logger.debug("No servicenow data found");
+	                }
+
+				});
 			});
+
+
 
 			logger.debug("Exit post() for /organizations/%s/businessgroups/%s/projects/%s/environments/%s/providers/%s/images/%s/blueprints", req.params.orgId, req.params.bgId, req.params.projectId, req.params.envId, req.params.providerId, req.params.imageId);
 		});
