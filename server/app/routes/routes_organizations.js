@@ -929,7 +929,7 @@ module.exports.setRoutes = function(app, sessionVerification) {
 								logger.error(err);
 								return;
 	                		}
-	                		logger.debug("done ==>",resData);
+	                		logger.debug("done ===========================>",resData);
 	                	});
 	                } else {
 	                	logger.debug("No servicenow data found");
