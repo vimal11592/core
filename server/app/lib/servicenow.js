@@ -69,9 +69,9 @@ var CMDBConfigSchema = new mongoose.Schema({
 });
 
 CMDBConfigSchema.methods.postCatalogitem = function(blueprintData, postData, callback) {
-    var username = CMDBConfigSchema.servicenowusername;
-    var password = CMDBConfigSchema.servicenowpassword;
-    var tmp = CMDBConfigSchema.url;
+    var username = postData[0].servicenowusername;
+    var password = postData[0].servicenowpassword;
+    var tmp = postData[0].url;
     var host = tmp.replace(/.*?:\/\//g, "");
     var url = host.split('/');
     var requestURL = 'https://' + url[0] + '/api/now/table/sc_cat_item';
@@ -79,9 +79,10 @@ CMDBConfigSchema.methods.postCatalogitem = function(blueprintData, postData, cal
         "name": blueprintData.name,
         "category": "37fc53ecdb3e52008dc05c00cf9619ed",
         "sc_catalogs": "1fdc5bacdb3e52008dc05c00cf9619cc",
-        "short_description": blueprintData.name + " is availbale.Blueprint-Id -( " + blueprintData._id + " )",
+        "short_description": blueprintData.name + " is availbale.",
         "workflow": "8fb38946db2212008dc05c00cf96197a",
-        "active": "true"
+        "active": "true",
+        "u_blueprint_id": blueprintData._id
     };
     var options = {
         url: requestURL,
@@ -97,28 +98,24 @@ CMDBConfigSchema.methods.postCatalogitem = function(blueprintData, postData, cal
     };
     request(options, function(error, response, body) {
         if (!error && response.statusCode == 201) {
-            logger.debug("success", JSON.stringify(body));
-            masterUtil.getParticularProject(blueprintData.projectId, function(err, envID) {
-                if (err) {
-                    logger.debug("Environment not found");
-                }
-                logger.debug("Env Id======>", JSON.stringify(envID));
-            });
+            logger.debug("success");
+            callback(error, JSON.stringify(body));
         } else {
             logger.error("Error", error);
         }
     });
 };
 
-CMDBConfigSchema.methods.catalogItemVarriable = function(catalogData, callback) {
+CMDBConfigSchema.methods.catalogItemVarriable = function(catalogData, postData, callback) {
     var username = postData[0].servicenowusername;
     var password = postData[0].servicenowpassword;
     var tmp = postData[0].url;
     var host = tmp.replace(/.*?:\/\//g, "");
     var url = host.split('/');
     var requestURL = 'https://' + url[0] + '/api/now/table/item_option_new';
+    logger.debug("Print catalog data here:", catalogData.result.sys_id);
     var requestBody = {
-        "cat_item": "af3ae055dbf292008dc05c00cf961998",
+        "cat_item": catalogData.result.sys_id,
         "default_value": "DEV",
         "choice_direction": "down",
         "active": "true",
@@ -126,31 +123,132 @@ CMDBConfigSchema.methods.catalogItemVarriable = function(catalogData, callback) 
         "question_text": "Select Environment",
         "type": "3"
     };
-    // var options = {
-    //     url: requestURL,
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'Accept': 'application/json',
-    //         "Authorization": "Basic " + new Buffer(username + ":" + password).toString('base64')
-    //     },
-    //     'body': requestBody,
-    //     'json': true
+    var options = {
+        url: requestURL,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            "Authorization": "Basic " + new Buffer(username + ":" + password).toString('base64')
+        },
+        'body': requestBody,
+        'json': true
 
-    // };
-    // request(options, function(error, response, body) {
-    //     if (!error && response.statusCode == 201) {
-    //         logger.debug("success", JSON.stringify(body));
-    //         masterUtil.getParticularProject(blueprintData.projectId, function(err, envID) {
-    //             if (err) {
-    //                 logger.debug("Environment not found");
-    //             }
-    //             logger.debug("Env Id======>", JSON.stringify(envID));
-    //         });
-    //     } else {
-    //         logger.error("Error", error);
-    //     }
-    // });
+    };
+    request(options, function(error, response, body) {
+        if (!error && response.statusCode == 201) {
+            logger.debug("success");
+            callback(error, JSON.stringify(body));
+        } else {
+            logger.error("Error", error);
+        }
+    });
+};
+
+CMDBConfigSchema.methods.catalogVarriableChoices = function(blueprintData,varriableData, postData, callback) {
+    var username = postData[0].servicenowusername;
+    var password = postData[0].servicenowpassword;
+    var tmp = postData[0].url;
+    var host = tmp.replace(/.*?:\/\//g, "");
+    var url = host.split('/');
+    var requestURL = 'https://' + url[0] + '/api/now/table/question_choice';
+    masterUtil.getParticularProject(blueprintData.projectId,function(err,data) {
+        if (err) {
+            logger.debug("Env not found.");
+        };
+        var envData = data[0];
+        var arrEnv = envData.environmentname.split(",");
+        var arrEnvId = envData.environmentname_rowid.split(",");
+        for (var i = 0; i < arrEnv.length; i++) {
+            if (arrEnv[i] !== '') {
+                var requestBody = {
+                    "question": varriableData.result.sys_id,
+                    "order": (i+1)*100,
+                    "text": arrEnv[i],
+                    "active": "true",
+                    "value": arrEnv[i],
+                    "u_environment_id": arrEnvId[i]
+                };
+                var options = {
+                    url: requestURL,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        "Authorization": "Basic " + new Buffer(username + ":" + password).toString('base64')
+                    },
+                    'body': requestBody,
+                    'json': true
+
+                };
+                request(options, function(error, response, body) {
+                    if (!error && response.statusCode == 201) {
+                        logger.debug("success");
+                        callback(error,JSON.stringify(body));
+                    } else {
+                        logger.error("Error", error);
+                    }
+                });
+            } else {
+                console.log("Data Inserted");
+            }
+        };
+    });
+};
+
+CMDBConfigSchema.methods.getCatalogitem = function(blueprintID, postData, callback) {
+    var username = postData[0].servicenowusername;
+    var password = postData[0].servicenowpassword;
+    var tmp = postData[0].url;
+    var host = tmp.replace(/.*?:\/\//g, "");
+    var url = host.split('/');
+    var requestURL = 'https://' + url[0] + '/sc_cat_item.do?JSONv2&sysparm_query=u_blueprint_id='+blueprintID;
+    var options = {
+        url: requestURL,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            "Authorization": "Basic " + new Buffer(username + ":" + password).toString('base64')
+        },
+        'json': true
+    };
+    request(options, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            logger.debug("success");
+            callback(error, JSON.stringify(body));
+        } else {
+            logger.error("Error", error);
+        }
+    });
+};
+
+CMDBConfigSchema.methods.deleteCatalogitem = function(catItemID, postData, callback) {
+    var username = postData[0].servicenowusername;
+    var password = postData[0].servicenowpassword;
+    var tmp = postData[0].url;
+    var host = tmp.replace(/.*?:\/\//g, "");
+    var url = host.split('/');
+    var requestURL = 'https://' + url[0] + '/api/now/table/sc_cat_item/'+catItemID;
+    var options = {
+        url: requestURL,
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            "Authorization": "Basic " + new Buffer(username + ":" + password).toString('base64')
+        },
+        'json': true
+
+    };
+    request(options, function(error, response, body) {
+        if (!error && response.statusCode == 204) {
+            logger.debug("success");
+            callback(error, response.statusCode);
+        } else {
+            logger.error("Error", error);
+        }
+    });
 };
 
 
@@ -201,7 +299,6 @@ CMDBConfigSchema.statics.getConfigItems = function(tableName, options, callback)
             callback(null, info);
 
         } else {
-            logger.error("Error");
             callback("Error in getting CMDB data", null);
         }
     });

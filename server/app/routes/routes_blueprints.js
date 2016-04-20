@@ -50,6 +50,8 @@ var AwsAutoScaleInstance = require('_pr/model/aws-auto-scale-instance');
 var ARM = require('_pr/lib/azure-arm.js');
 var fs = require('fs');
 var AzureARM = require('_pr/model/azure-arm');
+var ServiceNow = require('_pr/lib/servicenow.js')
+
 
 module.exports.setRoutes = function(app, sessionVerificationFunc) {
 
@@ -255,9 +257,35 @@ module.exports.setRoutes = function(app, sessionVerificationFunc) {
 			res.send(200, {
 				message: "deleted"
 			});
-		});
-	});
+			ServiceNow.getCMDBList(function(err, serviceNows) {
+				if (err) {
+					logger.error(err);
+					return;
+				}
+				if (serviceNows.length) {
+					serviceNows[0].getCatalogitem(req.params.blueprintId, serviceNows, function(err, resData) {
+						if (err) {
+							logger.error(err);
+							return;
+						}
+						logger.debug("Service Now Blueprint Data::", JSON.parse(resData).records[0].sys_id);
+						if (JSON.parse(resData).records[0].sys_id.length) {
+							serviceNows[0].deleteCatalogitem(JSON.parse(resData).records[0].sys_id, serviceNows, function(err, catData) {
+								if (err) {
+									logger.error(err);
+									return;
+								}
+								logger.debug("Blueprint deleted from servicenow", catData);
+							})
+						};
 
+					});
+				} else {
+					logger.debug("No servicenow data found");
+				}
+			});
+		});
+});
 	//for testing
 	app.get('/blueprints/azure/tryssh/:ip', function(req, res) {
 		var azureCloud = new AzureCloud();
@@ -344,7 +372,6 @@ module.exports.setRoutes = function(app, sessionVerificationFunc) {
 								return;
 							}
 							res.status(200).send(launchData)
-
 						});
 					});
 				}

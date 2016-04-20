@@ -715,8 +715,8 @@ module.exports.setRoutes = function(app, sessionVerification) {
 		var templateType = req.body.blueprintData.templateType;
 		var users = req.body.blueprintData.users || [];
 		var blueprintType = req.body.blueprintData.blueprintType;
-        var nexus = req.body.blueprintData.nexus;
-        var docker = req.body.blueprintData.docker;
+		var nexus = req.body.blueprintData.nexus;
+		var docker = req.body.blueprintData.docker;
 
 		// a temp fix for invalid appurl data. will be removed in next iteration
 		var tempAppUrls = [];
@@ -759,8 +759,8 @@ module.exports.setRoutes = function(app, sessionVerification) {
 				templateType: templateType,
 				users: users,
 				blueprintType: blueprintType,
-                nexus: nexus,
-                docker: docker
+				nexus: nexus,
+				docker: docker
 			};
 
 			logger.debug('req blueprintData:', blueprintData);
@@ -916,24 +916,40 @@ module.exports.setRoutes = function(app, sessionVerification) {
 						message: "DB error"
 					});
 					return;
-				}				
+				}
 				res.send(data);
-				ServiceNow.getCMDBList(function(err,serviceNows){
-					if(err) {
+				ServiceNow.getCMDBList(function(err, serviceNows) {
+					if (err) {
 						logger.error(err);
 						return;
-	                }
-	                if(serviceNows.length){
-	                	serviceNows[0].postCatalogitem(data,serviceNows,function(err,resData){
-	                		if(err) {
+					}
+					if (serviceNows.length) {
+						serviceNows[0].postCatalogitem(data, serviceNows, function(err, resData) {
+							if (err) {
 								logger.error(err);
 								return;
-	                		}
-	                		logger.debug("done ===========================>",resData);
-	                	});
-	                } else {
-	                	logger.debug("No servicenow data found");
-	                }
+							}
+							if (resData.length) {
+								serviceNows[0].catalogItemVarriable(JSON.parse(resData), serviceNows, function(err, catalogData) {
+									if (err) {
+										logger.error(err);
+										return;
+									}
+									if (resData.length) {
+										serviceNows[0].catalogVarriableChoices(data,JSON.parse(catalogData), serviceNows, function(err, varriableData) {
+											if (err) {
+												logger.error(err);
+												return;
+											}
+											logger.debug("Blueprint Updated in Service Now Successfully");
+										});
+									};
+								});
+							};
+						});
+					} else {
+						logger.debug("No servicenow data found");
+					}
 
 				});
 			});
@@ -1313,8 +1329,8 @@ module.exports.setRoutes = function(app, sessionVerification) {
 
 	app.post('/organizations/:orgId/businessgroups/:bgId/projects/:projectId/environments/:envId/addInstance', function(req, res) {
 		logger.debug("Enter post() for /organizations/%s/businessgroups/%s/projects/%s/environments/%s/addInstance", req.params.orgId, req.params.bgId, req.params.projectId, req.params.envId);
-		logger.debug("Body::::"+req.body);
-		logger.debug("JSON Body::::"+JSON.stringify(req.body));
+		logger.debug("Body::::" + req.body);
+		logger.debug("JSON Body::::" + JSON.stringify(req.body));
 		if (!(req.body.fqdn && req.body.os)) {
 			res.send(400);
 			return;
