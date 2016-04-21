@@ -107,6 +107,7 @@ CMDBConfigSchema.methods.postCatalogitem = function(blueprintData, postData, cal
 };
 
 CMDBConfigSchema.methods.catalogItemVarriable = function(catalogData, postData, callback) {
+    logger.debug("Start::catalogItemVarriable");
     var username = postData[0].servicenowusername;
     var password = postData[0].servicenowpassword;
     var tmp = postData[0].url;
@@ -146,6 +147,7 @@ CMDBConfigSchema.methods.catalogItemVarriable = function(catalogData, postData, 
 };
 
 CMDBConfigSchema.methods.catalogVarriableChoices = function(blueprintData,varriableData, postData, callback) {
+    logger.debug("START::catalogVarriableChoices");
     var username = postData[0].servicenowusername;
     var password = postData[0].servicenowpassword;
     var tmp = postData[0].url;
@@ -160,6 +162,7 @@ CMDBConfigSchema.methods.catalogVarriableChoices = function(blueprintData,varria
         var arrEnv = envData.environmentname.split(",");
         var arrEnvId = envData.environmentname_rowid.split(",");
         for (var i = 0; i < arrEnv.length; i++) {
+            logger.debug("==================>",arrEnv[i]);
             if (arrEnv[i] !== '') {
                 var requestBody = {
                     "question": varriableData.result.sys_id,
