@@ -13,11 +13,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-
-var tags = require('_pr/model/tags/tags.js');
-var unassignedInstances = require('_pr/model/unassigned-instances/');
+// @TODO Move tag related functions to a different service
+var tagsModel = require('_pr/model/tags/tags.js');
 var AWSProvider = require('_pr/model/classes/masters/cloudprovider/awsCloudProvider');
 var logger = require('_pr/logger')(module);
+var providersModel = require('_pr/model/v2.0/providers/providers');
+var gcpProviderModel = require('_pr/model/v2.0/providers/gcp-providers');
+var appConfig = require('_pr/config');
+var Cryptography = require('_pr/lib/utils/cryptography');
 
 const errorType = 'provider';
 
@@ -39,8 +42,220 @@ providerService.checkIfProviderExists = function checkIfProviderExists(providerI
     });
 };
 
+providerService.getProvider = function getProvider(providerId, callback) {
+    providersModel.getById(providerId, function(err, provider) {
+        if(err) {
+            var err = new Error('Internal Server Error');
+            err.status = 500;
+            return callback(err);
+        } else if (!provider) {
+            var err = new Error('Provider not found');
+            err.status = 404;
+            return callback(err);
+        } else if(provider) {
+            switch(provider.type) {
+                case 'gcp':
+                    var gcpProvider =  new gcpProviderModel(provider);
+                    var cryptoConfig = appConfig.cryptoSettings;
+                    var cryptography = new Cryptography(cryptoConfig.algorithm, cryptoConfig.password);
+
+                    gcpProvider.providerDetails.keyFile
+                        = cryptography.decryptText(gcpProvider.providerDetails.keyFile,
+                        cryptoConfig.decryptionEncoding, cryptoConfig.encryptionEncoding);
+                    gcpProvider.providerDetails.sshPrivateKey
+                        = cryptography.decryptText(gcpProvider.providerDetails.sshPrivateKey,
+                        cryptoConfig.decryptionEncoding, cryptoConfig.encryptionEncoding);
+                    gcpProvider.providerDetails.sshPublicKey
+                        = cryptography.decryptText(gcpProvider.providerDetails.sshPublicKey,
+                        cryptoConfig.decryptionEncoding, cryptoConfig.encryptionEncoding);
+
+                    return callback(null, gcpProvider);
+                    break;
+                default:
+                    var err = new Error('Bad request');
+                    err.status = 400;
+                    return callback(err);
+                    break;
+            }
+        }
+    })
+};
+
+providerService.checkProviderAccess = function checkProviderAccess(orgs, providerId, callback) {
+    providerService.getProvider(providerId, function(err, provider) {
+        if(err) {
+            return callback(err);
+        }
+
+        var authorized = orgs.reduce(function(a, b) {
+            if(b == provider.organizationId)
+                return true || a;
+            else
+                return false || a;
+        }, false);
+
+        if(!authorized) {
+            var err = new Error('Forbidden');
+            err.status = 403;
+            return callback(err);
+        } else {
+            return callback(null, provider);
+        }
+    });
+};
+
+providerService.createProvider = function createProvider(provider, callback) {
+    switch(provider.type) {
+        case 'gcp':
+            logger.debug('Creating new GCP provider');
+            gcpProviderModel.createNew(provider, function(err, provider) {
+                //@TODO To be generalized
+                if(err && err.name == 'ValidationError') {
+                    var err = new Error('Bad Request');
+                    err.status = 400;
+                    callback(err);
+                } else if(err) {
+                    var err = new Error('Internal Server Error');
+                    err.status = 500;
+                    callback(err);
+                }else {
+                    callback(null, provider);
+                }
+            });
+            break;
+        defaut:
+            var err = new Error('Bad request');
+            err.status = 400;
+            return callback(err);
+            break;
+    }
+};
+
+providerService.updateProvider = function updateProvider(provider, updateFields, callback) {
+    var fields = {};
+    if('name' in updateFields) {
+        fields.name = updateFields.name;
+        provider.name = updateFields.name;
+    }
+
+    switch (provider.type) {
+        case 'gcp':
+            if ('providerDetails' in updateFields) {
+                if ('projectId' in updateFields.providerDetails) {
+                    fields['providerDetails.projectId'] = updateFields.providerDetails.projectId;
+                    provider.providerDetails.projectId = updateFields.providerDetails.projectId;
+                }
+
+                if ('keyFile' in updateFields.providerDetails)
+                    fields['providerDetails.keyFile'] = updateFields.providerDetails.keyFile;
+
+                if ('sshPrivateKey' in updateFields.providerDetails)
+                    fields['providerDetails.sshPrivateKey'] = updateFields.providerDetails.sshPrivateKey;
+
+                if ('sshPublicKey' in updateFields.providerDetails)
+                    fields['providerDetails.sshPrivateKey'] = updateFields.providerDetails.sshPublicKey;
+            }
+            gcpProviderModel.updateById(provider._id, fields, function(err, result) {
+                if(err || !result) {
+                    var err = new Error('Internal Server Error');
+                    err.status = 500;
+                    callback(err);
+                } else if(result) {
+                    callback(null, provider);
+                }
+            });
+            break;
+        default:
+            var err = new Error('Bad request');
+            err.status = 400;
+            return callback(err);
+            break;
+    }
+};
+
+providerService.deleteProvider = function deleteProvider(providerId, callback) {
+    providersModel.deleteById(providerId, function(err, provider) {
+        if(err) {
+            var err = new Error('Internal server error');
+            err.status = 500;
+            return callback(err);
+        } else if(!provider) {
+            var err = new Error('Provider not found');
+            err.status = 404;
+            return callback(err);
+        } else {
+            // @TODO response to be decided
+            return callback(null, {});
+        }
+    });
+};
+
+providerService.getAllProviders = function getAllProviders(orgIds, callback) {
+    providersModel.getAllByOrgs(orgIds, function(err, providers) {
+        if(err) {
+            logger.error(err);
+            var err = new Error('Internal Server Error');
+            err.status = 500;
+            callback(err);
+        } else {
+            callback(null, providers);
+        }
+    });
+};
+
+providerService.createProviderResponseObject = function createProviderResponseObject(provider, callback) {
+    var providerResponseObject = {
+        id: provider._id,
+        name: provider.name,
+        type: provider.type,
+        organization: provider.organization,
+        providerDetails: {}
+    };
+
+    switch(provider.type) {
+        case 'gcp':
+            var gcpProvider =  new gcpProviderModel(provider);
+            providerResponseObject.providerDetails.projectId = gcpProvider.providerDetails.projectId;
+            break;
+        default:
+            var err = new Error('Bad request');
+            err.status = 400;
+            return callback(err);
+            break;
+    }
+
+    callback(null, providerResponseObject);
+};
+
+providerService.createProviderResponseList = function createProviderResponseList(providers, callback) {
+    var providersList = [];
+
+    if(providers.length == 0)
+        return callback(null, providersList);
+
+    for(var i = 0; i < providers.length; i++) {
+        (function(provider) {
+            // @TODO Improve call to self
+            providerService.createProviderResponseObject(provider, function(err, formattedProvider) {
+                if(err) {
+                    return callback(err);
+                } else {
+                    providersList.push(formattedProvider);
+                }
+
+                if(providersList.length == providers.length) {
+                    var providerListObj = {
+                        providers: providersList
+                    }
+                    return callback(null, providerListObj);
+                }
+            });
+        })(providers[i]);
+    }
+};
+
 providerService.getTagsByProvider = function getTagsByProvider(provider, callback) {
-    tags.getTagsByProviderId(provider._id, function(err, tags) {
+    tagsModel.getTagsByProviderId(provider._id, function(err, tags) {
         if(err) {
             var err = new Error('Internal server error');
             err.status = 500;
@@ -51,12 +266,13 @@ providerService.getTagsByProvider = function getTagsByProvider(provider, callbac
     });
 };
 
-providerService.getTagByNameAndProvider = function getTagByNameAndProvider(providerId, tagName, callback) {
+providerService.getTagByNameAndProvider
+    = function getTagByNameAndProvider(providerId, tagName, callback) {
     var params = {
         'providerId': providerId,
         'name': tagName
     };
-    tags.getTag(params, function(err, tag) {
+    tagsModel.getTag(params, function(err, tag) {
         if(err) {
             var err = new Error('Internal server error');
             err.status = 500;
@@ -69,6 +285,23 @@ providerService.getTagByNameAndProvider = function getTagByNameAndProvider(provi
             return callback(null, tag);
         }
     });
+};
+
+providerService.getTagMappingsByProviderId
+    = function getTagMappingsByProviderId(providerId, callback) {
+    tagsModel.getTagsWithMappingByProviderId(providerId,
+        function(err, tags) {
+            if(err) {
+                var err = new Error('Internal server error');
+                err.status = 500;
+                return callback(err);
+            } else if(tags.length == 0) {
+                return callback(null, []);
+            } else {
+                return callback(null, tags);
+            }
+        }
+    );
 };
 
 providerService.getTagByCatalystEntityTypeAndProvider
@@ -84,7 +317,7 @@ providerService.getTagByCatalystEntityTypeAndProvider
         'providerId': providerId,
         'catalystEntityType': catalystEntityType
     };
-    tags.getTag(params, function(err, tag) {
+    tagsModel.getTag(params, function(err, tag) {
         if(err) {
             var err = new Error('Internal server error');
             err.status = 500;
@@ -95,21 +328,6 @@ providerService.getTagByCatalystEntityTypeAndProvider
             return callback(err);
         }else {
             return callback(null, tag);
-        }
-    });
-};
-
-providerService.getUnassignedInstancesByProvider
-    = function getUnassignedInstancesByProvider(provider, callback) {
-    unassignedInstances.getByProviderId(provider._id, function(err, assignedInstances) {
-        if(err) {
-            var err = new Error('Internal server error');
-            err.status = 500;
-            return callback(err);
-        } else if(!assignedInstances) {
-            return callback(null, []);
-        }else {
-            return callback(null, assignedInstances);
         }
     });
 };
@@ -129,7 +347,7 @@ providerService.updateTag = function updateTag(provider, tagDetails, callback) {
         'description': tagDetails.description
     };
 
-    tags.updateTag(params, fields, function(err, tag) {
+    tagsModel.updateTag(params, fields, function(err, tag) {
         if(err) {
             var err = new Error('Internal server error');
             err.status = 500;
@@ -183,7 +401,7 @@ providerService.addMultipleTagMappings = function addMultipleTagMappings(provide
                 'catalystEntityType': null,
                 'catalystEntityMapping': []
             };
-            tags.updateTag(deleteParams, deleteFields, function (err, tag) {
+            tagsModel.updateTag(deleteParams, deleteFields, function (err, tag) {
 
                 if (err) {
                     var err = new Error('Internal server error');
@@ -199,7 +417,7 @@ providerService.addMultipleTagMappings = function addMultipleTagMappings(provide
                     var fields = {
                         'catalystEntityType': tagMapping.catalystEntityType
                     };
-                    tags.updateTag(params, fields, function (err, tag) {
+                    tagsModel.updateTag(params, fields, function (err, tag) {
                         if (err) {
                             var err = new Error('Internal server error');
                             err.status = 500;
@@ -218,7 +436,7 @@ providerService.addMultipleTagMappings = function addMultipleTagMappings(provide
     }
 
     if(tagNames.length > 0) {
-        return tags.getTagsByProviderIdAndNames(providerId, tagNames, callback);
+        return tagsModel.getTagsByProviderIdAndNames(providerId, tagNames, callback);
     } else {
         return callback(null, []);
     }
@@ -246,7 +464,8 @@ providerService.updateTagMapping = function updateTagMapping(tagDetails, tagMapp
             return callback(err);
         }
 
-        if(tagDetails.values.indexOf(tagMapping.catalystEntityMapping[i].tagValue) < 0) {
+        if((tagMapping.catalystEntityMapping[i].tagValue)
+            && (tagDetails.values.indexOf(tagMapping.catalystEntityMapping[i].tagValue) < 0)) {
             var err = new Error('Tag value not found');
             err.status = 404;
             return callback(err);
@@ -266,7 +485,7 @@ providerService.updateTagMapping = function updateTagMapping(tagDetails, tagMapp
     var fields = {
         'catalystEntityMapping': catalystEntityMappingList
     };
-    tags.updateTag(params, fields, function(err, tag) {
+    tagsModel.updateTag(params, fields, function(err, tag) {
         if(err) {
             var err = new Error('Internal server error');
             err.status = 500;
@@ -317,7 +536,7 @@ providerService.updateCatalystEntityMapping
     var fields = {
         'catalystEntityMapping': catalystEntityMappingList
     };
-    tags.updateTag(params, fields, function(err, tag) {
+    tagsModel.updateTag(params, fields, function(err, tag) {
         if(err) {
             var err = new Error('Internal server error');
             err.status = 500;
@@ -339,7 +558,7 @@ providerService.deleteTag = function deleteTag(provider, tagName, callback) {
         'name': tagName
     };
 
-    tags.deleteTag(params, function(err, tag) {
+    tagsModel.deleteTag(params, function(err, tag) {
         if(err) {
             var err = new Error('Internal server error');
             err.status = 500;
@@ -365,7 +584,7 @@ providerService.deleteTagMapping = function deleteTagMapping(providerId, catalys
         'catalystEntityType': null
     }
 
-    tags.updateTag(params, fields, function(err, tag) {
+    tagsModel.updateTag(params, fields, function(err, tag) {
         if(err) {
             var err = new Error('Internal server error');
             err.status = 500;
@@ -443,33 +662,3 @@ providerService.createTagMappingObject = function createTagMappingObject(tag, ca
 
     return callback(null, tagMappingObject);
 };
-
-providerService.createUnassignedInstancesList = function createUnassignedInstancesList(instances, callback) {
-    var instancesListObject = {};
-    var instancesList = [];
-
-    instances.forEach(function(instance) {
-        var tempInstance = {};
-        var provider = {
-            'id': instance.providerId,
-            'type': instance.providerType,
-            'data': instance.providerData?instance.providerData:null,
-        };
-        tempInstance.id = instance._id;
-        tempInstance.orgId = instance.orgId;
-        tempInstance.provider = provider;
-        tempInstance.platformId = instance.platformId;
-        tempInstance.ip = instance.ip;
-        tempInstance.os = instance.os;
-        tempInstance.state = instance.state;
-        tempInstance.project = instance.project;
-        tempInstance.environment = instance.environment;
-        tempInstance.tags = instance.tags;
-
-        instancesList.push(tempInstance);
-    });
-
-    instancesListObject.instances = instancesList;
-
-    return callback(null, instancesListObject);
-}

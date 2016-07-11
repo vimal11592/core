@@ -52,6 +52,11 @@ var AWSInstanceBlueprintSchema = new Schema({
 		required: true,
 		trim: true
 	},
+	region: {
+		type: String,
+		required: true,
+		trim: true
+	},
 	securityGroupIds: {
 		type: [String],
 		required: true,
@@ -178,9 +183,12 @@ AWSInstanceBlueprintSchema.methods.launch = function(launchParams, callback) {
 					self.instanceCount = "1";
 				}
 				var paramRunList = [];
+				var paramAttributes = [];
 				if (launchParams && launchParams.version) {
 					paramRunList = launchParams.version.runlist;
+					paramAttributes = launchParams.version.attributes;
 				}
+
 				ec2.launchInstance(anImage.imageIdentifier, self.instanceType, securityGroupIds, self.subnetId, 'D4D-' + launchParams.blueprintName, aKeyPair.keyPairName, self.instanceCount, function (err, instanceDataAll) {
 					if (err) {
 						logger.error("launchInstance Failed >> ", err);
@@ -198,14 +206,20 @@ AWSInstanceBlueprintSchema.methods.launch = function(launchParams, callback) {
 						var instance = {
 							name: launchParams.blueprintName,
 							orgId: launchParams.orgId,
+							orgName:launchParams.orgName,
 							bgId: launchParams.bgId,
+							bgName: launchParams.bgName,
 							projectId: launchParams.projectId,
+							projectName: launchParams.projectName,
 							envId: launchParams.envId,
+							environmentName: launchParams.envName,
 							providerId: launchParams.cloudProviderId,
 							providerType: launchParams.cloudProviderType,
 							keyPairId: self.keyPairId,
+							region:aKeyPair.region,
 							chefNodeName: instanceData.InstanceId,
 							runlist: paramRunList,
+							attributes: paramAttributes,
 							platformId: instanceData.InstanceId,
 							appUrls: launchParams.appUrls,
 							instanceIP: instanceData.PublicIpAddress || instanceData.PrivateIpAddress,
@@ -276,11 +290,12 @@ AWSInstanceBlueprintSchema.methods.launch = function(launchParams, callback) {
 
 							ec2.waitForInstanceRunnnigState(instance.platformId, function (err, instanceData) {
 								if (err) {
+									var timestamp = new Date().getTime();
 									logsDao.insertLog({
 										referenceId: logsReferenceIds,
 										err: true,
 										log: "Instance ready state wait failed. Unable to bootstrap",
-										timestamp: timestampStarted
+										timestamp: timestamp
 									});
 									logger.error("waitForInstanceRunnnigState returned an error  >>", err);
 									return;
@@ -316,9 +331,9 @@ AWSInstanceBlueprintSchema.methods.launch = function(launchParams, callback) {
 											referenceId: logsReferenceIds,
 											err: true,
 											log: "Instance ok state wait failed. Unable to bootstrap",
-											timestamp: timestampStarted
+											timestamp:  new Date().getTime()
 										});
-										logger.error('intance wait failed ==> ', openport, err);
+										logger.error('intance wait failed ==> ', err);
 										return;
 									}
 
@@ -363,7 +378,7 @@ AWSInstanceBlueprintSchema.methods.launch = function(launchParams, callback) {
 
 
 										launchParams.blueprintData.getCookBookAttributes(instance, repoData, function(err, jsonAttributes) {
-											//logger.debug("jsonAttributes: ",JSON.stringify(jsonAttributes));
+											logger.debug("jsonAttributes::::: ",JSON.stringify(jsonAttributes));
 											var runlist = instance.runlist;
 											//logger.debug("launchParams.blueprintData.extraRunlist: ", JSON.stringify(launchParams.blueprintData.extraRunlist));
 											if (launchParams.blueprintData.extraRunlist) {

@@ -21,6 +21,7 @@ var mongoose = require('mongoose');
 var request = require('request');
 var ObjectId = require('mongoose').Types.ObjectId;
 var masterUtil = require('../lib/utils/masterUtil.js');
+var userServices = require('../services/userService.js');
 
 var CMDBConfigSchema = new mongoose.Schema({
     id: {
@@ -71,6 +72,11 @@ var CMDBConfigSchema = new mongoose.Schema({
 CMDBConfigSchema.methods.postCatalogitem = function(blueprintData, postData, callback) {
     var username = postData[0].servicenowusername;
     var password = postData[0].servicenowpassword;
+     masterUtil.getParticularProject(blueprintData.projectId,function(err,data) {
+        if (err) {
+            logger.debug("Data not found.");
+        };
+    var orgDetail = data[0];
     var tmp = postData[0].url;
     var host = tmp.replace(/.*?:\/\//g, "");
     var url = host.split('/');
@@ -79,9 +85,24 @@ CMDBConfigSchema.methods.postCatalogitem = function(blueprintData, postData, cal
         "name": blueprintData.name,
         "category": "37fc53ecdb3e52008dc05c00cf9619ed",
         "sc_catalogs": "1fdc5bacdb3e52008dc05c00cf9619cc",
-        "short_description": blueprintData.name + " is availbale.",
-        "workflow": "8fb38946db2212008dc05c00cf96197a",
+        "short_description": "Laumch instance with"+blueprintData.name+"installed.",
+        "workflow": "07b80a54db60220004afb34ebf9619b8",
         "active": "true",
+        "description":"<p style='color:#000;font-weight: bold'>Orgname : "+postData[0].orgname[0]+
+        "</p><p style='color:#000;font-weight: bold'>Business Group:"+orgDetail.productgroupname+
+        "</p><p style='color:#000;font-weight: bold'>Project Name:"+orgDetail.projectname+
+        "</p><p style='color:#000;font-weight: bold'>Provider Type:"+blueprintData.blueprintConfig.cloudProviderType+
+        "</p><p style='color:#000;font-weight: bold'>Instance Type:"+blueprintData.blueprintConfig.cloudProviderData.instanceType+
+        "</p><p style='color:#000;font-weight: bold'>Region:"+blueprintData.blueprintConfig.cloudProviderData.region+
+        "</p><p style='color:#000;font-weight: bold'>Instance OS:"+blueprintData.blueprintConfig.cloudProviderData.instanceOS+
+        "</p><p style='color:#000;font-weight: bold'>No.of instances:"+blueprintData.blueprintConfig.cloudProviderData.instanceCount+
+        "</p><p style='color:#000;font-weight: bold'>Security Group:"+blueprintData.blueprintConfig.cloudProviderData.securityGroupIds+
+        "</p><p style='color:#000;font-weight: bold'>Instance OS:"+blueprintData.blueprintConfig.cloudProviderData.instanceAmiid+
+        "</p><p style='color:#000;font-weight: bold'>Instance ami-ID : "+blueprintData.blueprintConfig.cloudProviderData.instanceAmiid+
+        "</p><p style='color:#000;font-weight: bold'>VPC : "+blueprintData.blueprintConfig.cloudProviderData.vpcId+
+        "</p><p style='color:#000;font-weight: bold'>Subnet Id : "+blueprintData.blueprintConfig.cloudProviderData.subnetId+
+        "</p><p style='color:#000;font-weight: bold'>Infra Manger Type : "+blueprintData.blueprintConfig.infraMangerType+
+        "</p><p style='color:#000;font-weight: bold'>Blueprint Type : "+blueprintData.blueprintType+"</p>",
         "u_blueprint_id": blueprintData._id
     };
     var options = {
@@ -104,6 +125,7 @@ CMDBConfigSchema.methods.postCatalogitem = function(blueprintData, postData, cal
             logger.error("Error", error);
         }
     });
+});
 };
 
 CMDBConfigSchema.methods.catalogItemVarriable = function(catalogData, postData, callback) {

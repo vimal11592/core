@@ -25,7 +25,7 @@
     }
 
     .marginSpaceTop {
-        margin-top:20px;"
+        margin-top:20px;
     }
     .styleRight{
         float:right;
@@ -51,10 +51,42 @@
     .margin-top45{
         margin-top: 45px;
     }
+    .marginbottom0{
+        margin-bottom: 0px;
+    }
     .saveBtnTagsCSS{
         float: right;
         font-size: 10px;
         padding: 2px 4px;
+    }
+    .fntsize13mrgtop45{
+        font-size:13px;
+        margin-top:45px !important;
+    }
+    .marginleft200{
+        margin-left:200px;
+    }
+    .left0{
+        left:0px !important;
+    }
+    .fnt14clr666{
+        color:#666;
+        font-size:14px;
+    }
+    .fntsize13mrgtop10{
+        font-size:13px;
+        margin-top:10px;
+    }
+    .marginleft5right25{
+        margin-left:5px;
+        margin-right:25px;
+    }
+    .marginleft14{
+        margin-left: 14px;
+    }
+    .margintop-25left250{
+        margin-top: -25px;
+        margin-left: 250px;
     }
     .width-90{
         width:90%;
@@ -85,14 +117,20 @@
     <li>
         <a href="#instancesId" role="tab" data-toggle="tab" data-toggle="tooltip" title="Instances">Instances</a>
     </li>
+    <li>
+        <a href="#rdsId" role="tab" data-toggle="tab" data-toggle="tooltip" title="RDS">RDS</a>
+    </li>
+    <li>
+        <a href="#s3Id" role="tab" data-toggle="tab" data-toggle="tooltip" title="S3">S3</a>
+    </li>
 </ul>
 
 <!--tab content starts here-->
 <div class="tab-content">
     <!-- Tab panes -->
     <div class="tab-pane active tagsContainer" id="tagsId">
-        <div class="tabContent table-responsive col-lg-6" id="tagsIdDiv" style="left:0px !important">
-            <table class="table table-hover table-bordered" id="tagsTable" style="font-size:13px;margin-top:45px";>
+        <div class="tabContent table-responsive col-lg-6 left0" id="tagsIdDiv">
+            <table class="table table-hover table-bordered fntsize13mrgtop45" id="tagsTable">
                 <thead>
                 <tr>
                     <th class="text-center">Tag Name</th>
@@ -107,7 +145,7 @@
             <div action="" id="tagsFormId">
                 <div class="widget-box margin-top45">
                     <div class="widget-header">
-                        <h4 class="widget-margin" style="color:#666;font-size:14px">Create tag name to catalyst entity mapping</h4>
+                        <h4 class="widget-margin fnt14clr666">Create tag name to catalyst entity mapping</h4>
                     </div>
                     <div class="widget-body">
                         <div class="widget-main">
@@ -141,8 +179,8 @@
                         <div class="btn-group pull-right">
                             <span id="spantagsformSaveId" class="colorGreen spanformSaveCSS"></span>
                             <button class="btn btn-primary btn-mini btntagsFormSave">
-                            <i class="ace-icon fa fa-check bigger-110"></i>
-                            Save
+                                <i class="ace-icon fa fa-check bigger-110"></i>
+                                Save
                             </button>
                         </div>
                     </div>
@@ -155,11 +193,11 @@
         <div class="row">
             <div class="col-lg-6">
                 <div  class="tabContent table-responsive marginbottomCSS" id="mappingprojectIdDiv">
-                    <table class="table table-hover table-bordered text-center" id="mappingprojectTable" style="font-size:13px;margin-top:10px";>
+                    <table class="table table-hover table-bordered text-center fntsize13mrgtop10" id="mappingprojectTable">
                         <thead>
                         <tr>
                             <th class="text-center">Catalyst Project</th>
-                            <th class="text-center">Project Tag Name</th>
+                            <th class="text-center">Project Tag Value</th>
                         </tr>
                         </thead>
                         <tbody class="mappingprojecttblTbody">
@@ -170,19 +208,19 @@
                     <div class="btn-group pull-right">
                         <span id="spanprojectMappingSaveId" class="colorGreen spanformSaveCSS"></span>
                         <button class="btn btn-primary btn-mini btnprojectMappingSave">
-                        <i class="ace-icon fa fa-check bigger-110"></i>
-                        Save
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            Save
                         </button>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div  class="tabContent table-responsive marginbottomCSS" id="mappingenvIdDiv">
-                    <table class="table table-hover table-bordered text-center" id="mappingenvTable" style="font-size:13px;margin-top:10px";>
+                    <table class="table table-hover table-bordered text-center fntsize13mrgtop10" id="mappingenvTable">
                         <thead>
                         <tr>
                             <th class="text-center">Catalyst Environment</th>
-                            <th class="text-center">Environment Tag Name</th>
+                            <th class="text-center">Environment Tag Value</th>
                         </tr>
                         </thead>
                         <tbody class="mappingenvtblTbody">
@@ -193,8 +231,8 @@
                     <div class="btn-group pull-right">
                         <span id="spanenvMappingSaveId" class="colorGreen spanformSaveCSS"></span>
                         <button class="btn btn-primary btn-mini btnenvMappingSave">
-                        <i class="ace-icon fa fa-check bigger-110"></i>
-                        Save
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            Save
                         </button>
                     </div>
                 </div>
@@ -203,7 +241,7 @@
     </div>
     <div  class="tab-pane instancesContainer" id="instancesId">
         <div class="col-lg-6 col-md-6">
-            <label for="chooseCatalyst">Choose Catalyst Status:</label>
+            <label for="chooseCatalyst">Catalyst Status:</label>
             <div class="input-groups">
                 <select id="chooseCtalystSelectId" name="" class="required width-100 form-control">
                     <option val="Managed" data-catalystStatus="Managed">Managed</option>
@@ -217,17 +255,17 @@
                 <!--managed instances-->
                 <div  class="tab-pane active instancesListContainer" id="organiz">
                     <div  class="tabContent table-responsive" id="instanceListDiv" >
-                        <table class="table table-hover table-bordered" id="instanceListTable" style="font-size:13px;margin-top:45px;text-align: center";>
+                        <table class="table table-hover table-bordered text-center fntsize13mrgtop45" id="instanceListTable">
                             <thead>
                             <tr>
-                                <th style="text-align: center">InstanceId</th>
-                                <th style="text-align: center">OS</th>
-                                <th style="text-align: center">IP Address</th>
-                                <th style="text-align: center">Region</th>
-                                <th style="text-align: center">Status</th>
-                                <th style="text-align: center">Project</th>
-                                <th style="text-align: center">Environment</th>
-                                <th style="text-align: center">Actions</th>
+                                <th class="text-center">InstanceId</th>
+                                <th class="text-center">OS</th>
+                                <th class="text-center">IP Address</th>
+                                <th class="text-center">Region</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Project</th>
+                                <th class="text-center">Environment</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                             </thead>
                             <tbody class="managedInstance">
@@ -240,17 +278,17 @@
                 <!--unmanaged instances-->
                 <div  class="tab-pane unmanagedInstancesListContainer" id="unmanaged">
                     <div  class="tabContent table-responsive" id="unmanagedinstanceListDiv" >
-                        <table class="table table-hover table-bordered" id="unmanagedinstanceListTable" style="font-size:13px;margin-top:45px;text-align: center";>
+                        <table class="table table-hover table-bordered text-center fntsize13mrgtop45" id="unmanagedinstanceListTable">
                             <thead>
                             <tr>
-                                <th style="text-align: center">InstanceId</th>
-                                <th style="text-align: center">OS</th>
-                                <th style="text-align: center">IP Address</th>
-                                <th style="text-align: center">Region</th>
-                                <th style="text-align: center">Status</th>
-                                <th style="text-align: center">Project</th>
-                                <th style="text-align: center">Environment</th>
-                                <th style="text-align: center">Actions</th>
+                                <th class="text-center">InstanceId</th>
+                                <th class="text-center">OS</th>
+                                <th class="text-center">IP Address</th>
+                                <th class="text-center">Region</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Project</th>
+                                <th class="text-center">Environment</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                             </thead>
                             <tbody class="unManagedInstance">
@@ -258,9 +296,9 @@
                         </table>
                     </div>
                     <footer class="footer">
-                        <div style="text-align:center" class="clearfix form-actions">
+                        <div class="clearfix form-actions text-center">
                             <div>
-                                <input type="button" id="providerSyncBtn" style="margin-left:200px;" value="Import Instances" class="btn btn-primary showChefImportNodesModalBtn">
+                                <input type="button" id="providerSyncBtn" value="Import Instances" class="btn btn-primary showChefImportNodesModalBtn marginleft200">
                             </div>
                         </div>
                     </footer>
@@ -269,18 +307,63 @@
             <div id="Unassigned" hidden>
                 <div  class="tab-pane unassignedInstancesListContainer" id="unassigned">
                     <div  class="tabContent table-responsive" id="unassignedinstanceListDiv" >
-                        <table class="table table-hover table-bordered" id="unassignedinstanceListTable" style="font-size:13px;margin-top:45px;text-align:center";>
+                        <table class="table table-hover table-bordered text-center fntsize13mrgtop45" id="unassignedinstanceListTable">
                             <thead>
                             <tr>
-                                <th style="text-align: center">InstanceId</th>
-                                <th style="text-align: center">OS</th>
-                                <th style="text-align: center">IP Address</th>
-                                <th style="text-align: center">Status</th>
-                                <th style="text-align: center">Project Tag</th>
-                                <th style="text-align: center">Env. Tag</th>
+                                <th class="text-center">InstanceId</th>
+                                <th class="text-center">OS</th>
+                                <th class="text-center">IP Address</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Project Tag Value</th>
+                                <th class="text-center">Env. Tag Value</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                             </thead>
                             <tbody class="unAssignedInstance">
+                            </tbody>
+                        </table>
+                    </div>
+                    <footer class="footer">
+                        <div class="clearfix form-actions text-center marginleft200 marginbottom0">
+                            <div>
+                                <input type="button" id="unassignedSyncBtn" value="Update Tags" class="btn btn-primary">
+                            </div>
+                            <div class="margintop-25left250">
+                                <span id="spanunassignedformSaveId" class="colorGreen marginleft14"></span>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--rds data-->
+    <div  class="tab-pane rdsContainer" id="rdsId">
+        <div class="col-lg-6 col-md-6">
+            <label for="chooseCatalyst">Catalyst Status:</label>
+            <div class="input-groups">
+                <select id="chooseCatalystRDSId" name="" class="required width-100 form-control">
+                    <option val="Unasssigned" data-catalystStatus="rdsUnassigned">Unasssigned</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-12 margin-top10">
+            <div id="rdsUnassigned">
+                <div class="tab-pane unassignedRDSListContainer">
+                    <div class="tabContent table-responsive" id="unassignedRDSListDiv" >
+                        <table class="table table-hover table-bordered text-center fntsize13mrgtop45" id="unassignedRDSListTable">
+                            <thead>
+                            <tr>
+                                <th class="text-center">DBInstance</th>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Region</th>
+                                <th class="text-center">Instance Class</th>
+                                <th class="text-center">Multi-AZ</th>
+                                <th class="text-center">Created</th>
+                            </tr>
+                            </thead>
+                            <tbody class="unAssignedRDS">
                             </tbody>
                         </table>
                     </div>
@@ -288,6 +371,40 @@
             </div>
         </div>
     </div>
+    <!--rds tab ends here-->
+    <!--s3 data-->
+    <div  class="tab-pane s3Container" id="s3Id">
+        <div class="col-lg-6 col-md-6">
+            <label for="chooseCatalyst">Catalyst Status:</label>
+            <div class="input-groups">
+                <select id="chooseCatalystS3Id" name="" class="required width-100 form-control">
+                    <option val="Unasssigned" data-catalystStatus="s3Unassigned">Unasssigned</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-12 margin-top10">
+            <div id="s3Unassigned">
+                <div class="tab-pane unassignedS3ListContainer">
+                    <div class="tabContent table-responsive" id="unassignedS3ListDiv" >
+                        <table class="table table-hover table-bordered text-center fntsize13mrgtop45" id="unassignedS3ListTable">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Bucket Name</th>
+                                <th class="text-center">Bucket Owner</th>
+                                <th class="text-center">Org Name</th>
+                                <th class="text-center">Size(MB)</th>
+                                <th class="text-center">Created</th>
+                            </tr>
+                            </thead>
+                            <tbody class="unAssignedS3">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--s3 data tab ends here-->
 </div>
 
 <!--import instance modal-->
@@ -375,7 +492,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="marginForButtons">
-                        <label id="saveSpinner" class="hidden"><img  style="margin-left:5px;margin-right:25px;" src="img/select2-spinner.gif"></label>
+                        <label id="saveSpinner" class="hidden"><img class="marginleft5right25" src="img/select2-spinner.gif"></label>
                         <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
                         <button type="button" class="btn btn-primary importNodesBtn">Sync</button>
                     </div>
@@ -453,7 +570,7 @@
         });
     }
 
-    //initialising the datatable for Managed...
+    //initialising the datatable for Managed instances...
     if (!$.fn.dataTable.isDataTable('#instanceListTable')) {
         var $instanceManagedDatatable = $('#instanceListTable').DataTable({
             "pagingType": "full_numbers",
@@ -482,7 +599,7 @@
 
         });
     }
-    //initialising the datatable for Assigned...
+    //initialising the datatable for Assigned instances...
     if (!$.fn.dataTable.isDataTable('#unmanagedinstanceListTable')) {
         var $instanceUnManagedDatatable = $('#unmanagedinstanceListTable').DataTable({
             "pagingType": "full_numbers",
@@ -511,7 +628,7 @@
 
         });
     }
-    //initialising the datatable for Assigned...
+    //initialising the datatable for UnAssigned instances...
     if (!$.fn.dataTable.isDataTable('#unassignedinstanceListTable')) {
         var $instanceUnAssignedDatatable = $('#unassignedinstanceListTable').DataTable({
             "pagingType": "full_numbers",
@@ -521,6 +638,35 @@
             "bFilter": true,
             "aaSorting": [[ 4, "asc" ]],
             "aoColumns": [{
+                "bSortable": true
+            }, {
+                "bSortable": true
+            }, {
+                "bSortable": true
+            }, {
+                "bSortable": true
+            }, {
+                "bSortable": false
+            }, {
+                "bSortable": false
+            },{
+                "bSortable": false
+            }]
+
+        });
+    }
+
+    //initialising the datatable for UnAssigned RDS(unassigned)...
+    if (!$.fn.dataTable.isDataTable('#unassignedRDSListTable')) {
+        var $rdsUnAssignedDatatable = $('#unassignedRDSListTable').DataTable({
+            "pagingType": "full_numbers",
+            "bInfo": true,
+            "bLengthChange": true,
+            "paging": true,
+            "bFilter": true,
+            "aoColumns": [{
+                "bSortable": false
+            }, {
                 "bSortable": false
             }, {
                 "bSortable": false
@@ -537,18 +683,31 @@
         });
     }
 
-    $(document).ready(function(e) {
-        /*var urlParams = {};
-        (window.onpopstate = function() {
-            var url = window.location.href;
-            var indexOfQues = url.lastIndexOf("?");
-            if (indexOfQues != -1) {
-                var sub = url.substring(indexOfQues + 1);
-                //console.log(sub);
-                urlParams.providerId = sub;
-            }
-        })();*/
+    //initialising the datatable for S3 (unassigned)...
+    if (!$.fn.dataTable.isDataTable('#unassignedS3ListTable')) {
+        var $s3UnAssignedDatatable = $('#unassignedS3ListTable').DataTable({
+            "pagingType": "full_numbers",
+            "bInfo": true,
+            "bLengthChange": true,
+            "paging": true,
+            "bFilter": true,
+            "aoColumns": [{
+                "bSortable": false,
+                "sWidth": "250%"
+            }, {
+                "bSortable": false
+            }, {
+                "bSortable": false
+            }, {
+                "bSortable": false
+            }, {
+                "bSortable": false
+            }]
 
+        });
+    }
+
+    $(document).ready(function(e) {
         var urlParams = {};
         (window.onpopstate = function() {
             var url = window.location.href;
@@ -570,10 +729,11 @@
             return;
         }
         if(urlproviderId && urlproviderId.indexOf("#ajax") == -1){
-          getTagsListData(urlproviderId);
-          getManagedInstances();
-          //getUnmanagedInstances();
-          //getUnassignedInstances();
+            getTagsListData(urlproviderId);
+            getManagedInstances();
+            //calling the rds and s3 unassigned function to extract the data.
+            getUnassignedRDSData();
+            getUnassignedS3Data();
         }
         //loading Managed Data
         function getTagsListData(providerId) {
@@ -588,22 +748,6 @@
                 }
                 bootbox.alert(msg);
             });
-            /*var tagsListdummy = {
-                "tags": [{
-                    "name": "env",
-                    "description": null
-                }, {
-                    "name": "application",
-                    "description": "Project name"
-                },{
-                    "name": "testingEnv",
-                    "description": ""
-                }],
-                "count": 2,
-                "pageSize": 10,
-                "pageIndex": 1
-            };
-            loadTagsTabData(tagsListdummy,providerId);*/
         }
 
         function loadTagsTabData(tagsListData,providerId) {
@@ -612,7 +756,7 @@
             $projecttagsList.empty();
             $envtagsList.empty();
             $tagsDatatable.clear().draw();
-            
+
             $projecttagsList.append($('<option></option>').html("Choose Project"));
             $envtagsList.append($('<option></option>').html("Choose Environment"));
             for (var i = 0; i < tagsListData.length; i++) {
@@ -635,7 +779,7 @@
                     var $inputTxt = '';
                     $inputTxt = $('<input id="tagdescinputId'+i+'" type="text" class="width-90 border-grey tagsDescInput"></input><a class="btn btn-primary saveBtnTagsCSS" title="Save"><i class="ace-icon fa fa-save bigger-110"></i></a>');
                 }
-                
+
                 var $tdDesc = $('<td></td>').append($inputTxt);
                 $tr.append($tdDesc);
 
@@ -643,44 +787,16 @@
             }
 
             $('#tagsTable').on('keypress','.tagsDescInput',function(event){
-                    var keycode = (event.keyCode ? event.keyCode : event.which);
-                    if(keycode == '13'){
-                        var $this = $(this);
-                        var id = $this.attr('id');
-                        var tagName = $this.parents().eq(1).find('.tagName').html();
-                        var tagDesc = $this.parents().eq(1).find('input').val();
-                       
-                        //Send the body update tag
-                        var objupdatetagDesc = {};
-                        objupdatetagDesc["description"] = tagDesc;
-                        $.ajax({
-                            url: '/providers/'+ providerId +'/tags/'+ tagName,
-                            method: 'PUT',
-                            data: JSON.stringify(objupdatetagDesc),
-                            contentType: "application/json",
-                            success: function() {
-                                $('#'+id).css('background-color','lightyellow');
-                            },
-                            error: function(jxhr) {
-                               
-                            }
-                        }); 
-                    }
-                    //Stop the event from propogation to other handlers
-                    //If this line will be removed, then keypress event handler attached 
-                    //at document level will also be triggered
-                    event.stopPropagation();
-                });
-                $('#tagsTable').on('click','.saveBtnTagsCSS',function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
                     var $this = $(this);
-                    var id = $this.parents().eq(1).find('input').attr('id');
+                    var id = $this.attr('id');
                     var tagName = $this.parents().eq(1).find('.tagName').html();
                     var tagDesc = $this.parents().eq(1).find('input').val();
 
                     //Send the body update tag
                     var objupdatetagDesc = {};
                     objupdatetagDesc["description"] = tagDesc;
-                    console.log(objupdatetagDesc);
                     $.ajax({
                         url: '/providers/'+ providerId +'/tags/'+ tagName,
                         method: 'PUT',
@@ -690,48 +806,40 @@
                             $('#'+id).css('background-color','lightyellow');
                         },
                         error: function(jxhr) {
-                            
+
                         }
-                    }); 
+                    });
+                }
+                //Stop the event from propogation to other handlers
+                //If this line will be removed, then keypress event handler attached
+                //at document level will also be triggered
+                event.stopPropagation();
+            });
+            $('#tagsTable').on('click','.saveBtnTagsCSS',function(event){
+                var $this = $(this);
+                var id = $this.parents().eq(1).find('input').attr('id');
+                var tagName = $this.parents().eq(1).find('.tagName').html();
+                var tagDesc = $this.parents().eq(1).find('input').val();
+
+                //Send the body update tag
+                var objupdatetagDesc = {};
+                objupdatetagDesc["description"] = tagDesc;
+                $.ajax({
+                    url: '/providers/'+ providerId +'/tags/'+ tagName,
+                    method: 'PUT',
+                    data: JSON.stringify(objupdatetagDesc),
+                    contentType: "application/json",
+                    success: function() {
+                        $('#'+id).css('background-color','lightyellow');
+                    },
+                    error: function(jxhr) {
+
+                    }
                 });
-
-
-
-            var blankArr = [];
-            loaddefaultTagMappingSelection(blankArr);
+            });
+            /*var blankArr = [];
+             loaddefaultTagMappingSelection(blankArr);*/
         }
-        /*var tagsListSelected = {
-            "tagNameMappings": [{
-                "tagName": "application",
-                "tagValues": ["proj1", "proj2"],
-                "catalystEntityType": "project",
-                "catalystEntityMapping": [{
-                    "catalystEntityId": "<MongoID>",
-                    "catalystEntityName": "Project1",
-                    "tagValue": "proj1"
-                }, {
-                    "catalystEntityId": "<MongoID>",
-                    "catalystEntityName": "Project2",
-                    "tagValue": "proj2"
-                }]
-            }, {
-                "tagName": "testingEnv",
-                "tagValues": ["prod", "dev"],
-                "catalystEntityType": "environment",
-                "catalystEntityMapping": [{
-                    "catalystEntityId": "<MongoID>",
-                    "catalystEntityName": "Development",
-                    "tagValue": "dev"
-                }, {
-                    "catalystEntityId": "<MongoID>",
-                    "catalystEntityName": "Production",
-                    "tagValue": "prod"
-                }]
-            }],
-            "count": 2,
-            "pageSize": 10,
-            "pageIndex": 1
-        };*/
         function loaddefaultTagMappingSelection(catalystEntityTypeListPassed){
             $.ajax({
                 url: '/providers/'+urlproviderId+'/tag-mappings',
@@ -749,9 +857,9 @@
                         var objtagName = tagsListSelected[i].tagName;
                         var tagValues = tagsListSelected[i].tagValues;
                         var catalystEntityMapping = tagsListSelected[i].catalystEntityMapping;
+
                         if(objcatalystEntityType == catalystEntityProjName){
                             $projecttagsList.val(objtagName);
-
                             //For Mapping tab.....
                             //For project catalystEntityType
                             $mappingprojectDatatable.clear().draw();
@@ -767,10 +875,13 @@
 
                                 var $mappingprojectSelectList= $('<select class="mappingprojectSelectId"></select>');
                                 $mappingprojectSelectList.empty();
+                                $mappingprojectSelectList.append($('<option></option>').val('').html('-- None --'));
                                 for(var k=0; k< tagValues.length; k++){
-                                    $mappingprojectSelectList.append($('<option></option>').val(tagValues[k]).html(tagValues[k]));
+                                    if(tagValues[k] !=''){
+                                        $mappingprojectSelectList.append($('<option></option>').val(tagValues[k]).html(tagValues[k]));
+                                    }
                                 }
-                                
+
                                 var $tdprojectTagName = $('<td class="mappingprojectTagName"></td>').append($mappingprojectSelectList);
                                 $tr.append($tdprojectTagName);
 
@@ -778,7 +889,7 @@
                                 $mappingprojectDatatable.row.add($tr).draw();
 
                                 for(var l = 0; l < catalystEntityMapping.length; l++){
-                                    
+
                                     if(catalystEntityTypeListPassed[j].rowid == catalystEntityMapping[l].catalystEntityId){
                                         $mappingprojectSelectList.val(catalystEntityMapping[l].tagValue);
                                     }
@@ -788,47 +899,14 @@
                         //For environment catalystEntityType
                         if(objcatalystEntityType == catalystEntityEnvName){
                             $envtagsList.val(objtagName);
-                            /*//For Mapping tab.....
-                            //For environment catalystEntityType
-                            $mappingenvDatatable.clear().draw();
-                            var $tbody = $('#mappingenvTable tbody').empty();
-
-                            for(var m = 0; m < catalystEntityTypeListPassed.length; m++){
-                                //For Table
-                                //alert(catalystEntityTypeListPassed[m].environmentname);
-                                var $tr = $('<tr id="'+catalystEntityTypeListPassed[m].rowid+'" class=""></tr>');
-
-                                var $tdenvName = $('<td class="mappingenvName"></td>').append(catalystEntityTypeListPassed[m].environmentname);
-                                $tr.append($tdenvName);
-
-                                var $mappingenvSelectList= $('<select class="mappingenvSelectId"></select>');
-                                $mappingenvSelectList.empty();
-                                for(var n=0; n< tagValues.length; n++){
-                                    $mappingenvSelectList.append($('<option></option>').val(tagValues[n]).html(tagValues[n]));
-                                }
-                                
-                                var $tdenvTagName = $('<td class="mappingenvTagName"></td>').append($mappingenvSelectList);
-                                $tr.append($tdenvTagName);
-
-
-                                $tbody.append($tr);
-                                $mappingenvDatatable.row.add($tr).draw();
-
-                                for(var p = 0; p < catalystEntityMapping.length; p++){
-                                    if(catalystEntityTypeListPassed[m].rowid == catalystEntityMapping[p].catalystEntityId){
-                                        //alert("Matched");
-                                        $mappingenvSelectList.val(catalystEntityMapping[p].tagValue);
-                                    }
-                                }
-                            }*/
                         }
                     }
                 },
                 error: function(jxhr) {
-                    
+
                 }
             });
-            
+
         }
         $('.btntagsFormSave').on('click',function(){
             var $projecttagsList = $('#tagsProjectSelect');
@@ -847,9 +925,9 @@
 
             //Creating the data to Post for Save tags.
             var tagsData = [{
-                    "catalystEntityType": catalystEntityProjName,
-                    "tagName": tagsProjSelectedVal
-                },
+                "catalystEntityType": catalystEntityProjName,
+                "tagName": tagsProjSelectedVal
+            },
                 {
                     "catalystEntityType": catalystEntityEnvName,
                     "tagName": tagsenvSelectedVal
@@ -860,16 +938,18 @@
                 data: JSON.stringify(tagsData),
                 contentType: "application/json",
                 success: function(tagsListPost) {
+                    $('#spantagsformSaveId').fadeIn();
                     $('#spantagsformSaveId').html("Saved successfully");
+                    $('#spantagsformSaveId').delay(2000).fadeOut();
                     getprojectData();
                     getenvironmentData();
                 },
                 error: function(jxhr) {
-                    
+
                 }
             });
         });
-        
+
         //Mapping tabs operation starts....
         getprojectData();
         getenvironmentData();
@@ -881,7 +961,6 @@
                 for (var i = 0; i < projectist.length; i++) {
                     for(var j=0;j<projectist[i].orgname.length;j++){
                         if(orgId == projectist[i].orgname[j]){
-                            //alert("Hello");
                             projectListArr.push(projectist[i]);
                         }
                     }
@@ -936,10 +1015,13 @@
 
                         var $mappingenvSelectList= $('<select class="mappingenvSelectId"></select>');
                         $mappingenvSelectList.empty();
+                        $mappingenvSelectList.append($('<option></option>').val('').html('-- None --'));
                         for(var j=0; j< data.tagValues.length; j++){
-                            $mappingenvSelectList.append($('<option></option>').val(data.tagValues[j]).html(data.tagValues[j]));
+                            if(data.tagValues[j] != ''){
+                                $mappingenvSelectList.append($('<option></option>').val(data.tagValues[j]).html(data.tagValues[j]));
+                            }
                         }
-                        
+
                         var $tdenvTagName = $('<td class="mappingenvTagName"></td>').append($mappingenvSelectList);
                         $tr.append($tdenvTagName);
 
@@ -952,10 +1034,10 @@
                                 $mappingenvSelectList.val(data.catalystEntityMapping[k].tagValue);
                             }
                         }
-                    } 
-                }  
+                    }
+                }
             }).fail(function(jxhr) {
-                
+
             });
         }
 
@@ -985,13 +1067,14 @@
                         type: 'PATCH',
                         contentType: "application/json",
                         success: function(data) {
+                            $('#spanprojectMappingSaveId').fadeIn();
                             $('#spanprojectMappingSaveId').html('Saved successfully');
+                            $('#spanprojectMappingSaveId').delay(2000).fadeOut();
                         },
                         error: function(jqxhr) {
-                            
                         }
                     });
-                }                
+                }
             });
         });
 
@@ -1016,20 +1099,29 @@
 
                 envMappingObj.catalystEntityMapping.push(objenvMapping);
                 if(counter == $('#mappingenvTable tbody tr').length){
-                    console.log(envMappingObj);
                     $.ajax({
                         url: '/providers/'+urlproviderId+'/tag-mappings/environment',
                         data: JSON.stringify(envMappingObj),
                         type: 'PATCH',
                         contentType: "application/json",
                         success: function(data) {
+                            $('#spanenvMappingSaveId').fadeIn();
                             $('#spanenvMappingSaveId').html('Saved successfully');
+                            $('#spanenvMappingSaveId').delay(2000).fadeOut();
                         },
                         error: function(jqxhr) {
-                            
+                            var msg = " ";
+                            if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                                msg = jxhr.responseJSON.message;
+                            } else if (jxhr.responseText) {
+                                msg = jxhr.responseText;
+                            }
+                            $('#spanenvMappingSaveId').fadeIn();
+                            $('#spanenvMappingSaveId').html(msg);
+                            $('#spanenvMappingSaveId').delay(2000).fadeOut();
                         }
                     });
-                }                
+                }
             });
         });
 
@@ -1139,7 +1231,7 @@
                     d4ddata = JSON.parse(data);
                 },
                 failure: function(data) {
-                    alert(data.toString());
+                    bootbox.alert(data.toString());
                 }
             });
             return (d4ddata);
@@ -1210,40 +1302,36 @@
 
         });
 
-
         function loadManagedInstances(managnedData) {
             $instanceManagedDatatable.clear().draw();
             var $tbody = $('#managedInstance tbody').empty();
-            for (var i = 0; i < managnedData.length; i++) {
-                var $tr = $('<tr class="managedInstance"></tr>').attr('data-id',managnedData[i]._id);
-                var $tdId = $('<td></td>').append(managnedData[i].platformId);
+            for (var i = 0; i < managnedData.managedInstances.length; i++) {
+                var $tr = $('<tr class="managedInstance"></tr>').attr('data-id',managnedData.managedInstances[i]._id);
+                var $tdId = $('<td></td>').append(managnedData.managedInstances[i].platformId);
                 $tr.append($tdId);
 
-                var $tdOs = $('<td></td>').append(managnedData[i].hardware.os);
+                var $tdOs = $('<td></td>').append(managnedData.managedInstances[i].hardware.os);
                 $tr.append($tdOs);
 
-                var $tdIpAddress = $('<td></td>').append(managnedData[i].instanceIP);
+                var $tdIpAddress = $('<td></td>').append(managnedData.managedInstances[i].instanceIP);
                 $tr.append($tdIpAddress);
 
-                var region = '';
-                if (managnedData[i].providerData && managnedData[i].providerData.region) {
-                    region = managnedData[i].providerData.region;
-                }
+                var region  = managnedData.managedInstances[i].region;
                 var $tdRegion = $('<td></td>').append(region);
                 $tr.append($tdRegion);
-                var $tdStatus = $('<td></td>').append(managnedData[i].instanceState);
+                var $tdStatus = $('<td></td>').append(managnedData.managedInstances[i].instanceState);
                 $tr.append($tdStatus);
 
-                var $projectName = $('<td></td>').append(managnedData[i].projectName);
+                var $projectName = $('<td></td>').append(managnedData.managedInstances[i].projectName);
                 $tr.append($projectName);
-                 var $environmentName = $('<td></td>').append(managnedData[i].environmentName);
+                var $environmentName = $('<td></td>').append(managnedData.managedInstances[i].environmentName);
                 $tr.append($environmentName);
 
                 var $button = '';
 
-                if (managnedData[i].instanceState === 'terminated') {
+                if (managnedData.managedInstances[i].instanceState === 'terminated') {
 
-                    $button = $('<div style="margin-left:14px;" class="btn-group"><button class="btn btn-danger pull-left btn-sg tableactionbutton globalTrackUrlRemove" data-placement="top" value="Remove" title="Delete"><i class="ace-icon fa fa-trash-o bigger-120"></i></button></div>');
+                    $button = $('<div class="btn-group marginleft14"><button class="btn btn-danger pull-left btn-sg tableactionbutton globalTrackUrlRemove" data-placement="top" value="Remove" title="Delete"><i class="ace-icon fa fa-trash-o bigger-120"></i></button></div>');
                     $button.click(function() {
                         var $this = $(this);
                         var $tr = $this.parents('tr.managedInstance');
@@ -1289,36 +1377,36 @@
         function loadUnmanagedInstances(unManagnedData) {
             $instanceUnManagedDatatable.clear().draw();
             var $tbody = $('#unManagedInstance tbody').empty();
-            for (var i = 0; i < unManagnedData.length; i++) {
-                var $tr = $('<tr></tr>').attr('instanceId', unManagnedData[i]._id);
-                var $tdId = $('<td></td>').append(unManagnedData[i].platformId);
+            for (var i = 0; i < unManagnedData.unmanagedInstances.length; i++) {
+                var $tr = $('<tr></tr>').attr('instanceId', unManagnedData.unmanagedInstances[i]._id);
+                var $tdId = $('<td></td>').append(unManagnedData.unmanagedInstances[i].platformId);
                 $tr.append($tdId);
 
-                var $tdOs = $('<td></td>').append(unManagnedData[i].os);
+                var $tdOs = $('<td></td>').append(unManagnedData.unmanagedInstances[i].os);
                 $tr.append($tdOs);
 
-                var $tdIpAddress = $('<td></td>').append(unManagnedData[i].ip);
+                var $tdIpAddress = $('<td></td>').append(unManagnedData.unmanagedInstances[i].ip);
                 $tr.append($tdIpAddress);
 
                 var region = '';
-                if (unManagnedData[i].providerData && unManagnedData[i].providerData.region) {
-                    region = unManagnedData[i].providerData.region;
+                if (unManagnedData.unmanagedInstances[i].providerData && unManagnedData.unmanagedInstances[i].providerData.region) {
+                    region = unManagnedData.unmanagedInstances[i].providerData.region;
                 }
                 var $tdRegion = $('<td></td>').append(region);
                 $tr.append($tdRegion);
-                var $tdStatus = $('<td></td>').append(unManagnedData[i].state);
+                var $tdStatus = $('<td></td>').append(unManagnedData.unmanagedInstances[i].state);
                 $tr.append($tdStatus);
 
 
-                var $projectName = $('<td></td>').append(unManagnedData[i].projectName);
+                var $projectName = $('<td></td>').append(unManagnedData.unmanagedInstances[i].projectName);
                 $tr.append($projectName);
-                 var $environmentName = $('<td></td>').append(unManagnedData[i].environmentName);
+                var $environmentName = $('<td></td>').append(unManagnedData.unmanagedInstances[i].environmentName);
                 $tr.append($environmentName);
 
 
                 var $input = '';
-                if (unManagnedData[i].state === 'running') {
-                    $input = $('<input class="nodeCheckBox" type="checkbox">').val(unManagnedData[i]._id);
+                if (unManagnedData.unmanagedInstances[i].state === 'running') {
+                    $input = $('<input class="nodeCheckBox" type="checkbox">').val(unManagnedData.unmanagedInstances[i]._id);
                 }
                 var $tdAction = $('<td></td>').append($input);
                 $tr.append($tdAction);
@@ -1328,13 +1416,11 @@
         }
 
 
-        function loadUnassignedInstances(unassignedData){
+        function loadUnassignedInstances(unassignedData, envprojMappingObject){
             $instanceUnAssignedDatatable.clear().draw();
-            
             for (var i = 0; i < unassignedData.instances.length; i++) {
                 var $tbody = $('#unassignedinstanceListTable tbody').empty();
-
-                var $tr = $('<tr></tr>').attr('instanceId', unassignedData.instances[i]._id);
+                var $tr = $('<tr></tr>').attr({ "instanceid" : unassignedData.instances[i].id, "projecttagsmapname" : envprojMappingObject.project, "envtagsmapname" : envprojMappingObject.environment });
 
                 var $tdId = $('<td></td>').append(unassignedData.instances[i].platformId);
                 $tr.append($tdId);
@@ -1348,17 +1434,121 @@
                 var $tdStatus = $('<td></td>').append(unassignedData.instances[i].state);
                 $tr.append($tdStatus);
 
-                var $tdProjectTag = $('<td></td>').append(unassignedData.instances[i].projectTag);
-                $tr.append($tdProjectTag);
+                //Loop to append the project from the tags
+                if(unassignedData.instances[i].tags){
+                    if(envprojMappingObject.project in unassignedData.instances[i].tags){
+                        var projectTagName = unassignedData.instances[i].tags[envprojMappingObject.project];
+                        var $inputTextProject = $('<input type="text" class="form-control projectTagName" value="'+projectTagName+'"></input>');
 
-                var $tdEnvTag = $('<td></td>').append(unassignedData.instances[i].envTag);
-                $tr.append($tdEnvTag);
+                        var $tdProjectTag = $('<td></td>').append($inputTextProject);
+                        $tr.append($tdProjectTag);
+                    }else{
+                        var $inputTextProject = $('<input type="text" class="form-control projectTagName" value=""></input>');
+                        var $tdProjectTag = $('<td></td>').append($inputTextProject);
+                        $tr.append($tdProjectTag);
+                    }
+
+                    if(envprojMappingObject.environment in unassignedData.instances[i].tags){
+                        var environmentTagName = unassignedData.instances[i].tags[envprojMappingObject.environment];
+                        var $inputTextEnv = $('<input type="text" class="form-control envTagName" value="'+environmentTagName+'"></input>');
+                        var $tdEnvTag = $('<td></td>').append($inputTextEnv);
+                        $tr.append($tdEnvTag);
+                    }else{
+                        var $inputTextEnv = $('<input type="text" class="form-control envTagName" value=""></input>');
+                        var $tdEnvTag = $('<td></td>').append($inputTextEnv);
+                        $tr.append($tdEnvTag);
+                    }
+                }
+                if(unassignedData.instances[i].tags == "undefined" || unassignedData.instances[i].tags == null){
+                    var $inputTextProject = $('<input type="text" class="form-control projectTagName" value=""></input>');
+                    var $tdProjectTag = $('<td></td>').append($inputTextProject);
+                    $tr.append($tdProjectTag);
+
+                    var $inputTextEnv = $('<input type="text" class="form-control envTagName" value=""></input>');
+                    var $tdEnvTag = $('<td></td>').append($inputTextEnv);
+                    $tr.append($tdEnvTag);
+                }
+
+                $inputCheckbox = $('<input class="nodeCheckBox" type="checkbox">');
+                var $tdActionCheckbox = $('<td></td>').append($inputCheckbox);
+                $tr.append($tdActionCheckbox);
 
                 $tbody.append($tr);
                 $instanceUnAssignedDatatable.row.add($tr).draw();
             }
         }
-        //loading Managed Data
+        //loading unAssigned RDS Data.
+        function loadUnassignedRDSData(unassignedRDSData){
+            $rdsUnAssignedDatatable.clear().draw();
+            for (var i = 0; i < unassignedRDSData.resources.length; i++) {
+                var $tbody = $('#unassignedRDSListTable tbody').empty();
+                var $tr = $('<tr></tr>').attr({"rdsId" : unassignedRDSData.resources[i]._id});
+                //creating td for RDS name..
+                var $tdDbRDSName = $('<td></td>').append(unassignedRDSData.resources[i].resourceDetails.dbName);
+                $tr.append($tdDbRDSName);
+                //creating td for RDS Type..
+                var $tdType = $('<td></td>').append(unassignedRDSData.resources[i].resourceDetails.dbEngine);
+                $tr.append($tdType);
+                //creating td for RDS Status..
+                var $tdStatus = $('<td></td>').append(unassignedRDSData.resources[i].resourceDetails.dbInstanceStatus);
+                $tr.append($tdStatus);
+                //creating td for RDS Region..
+                var $tdRegion = $('<td></td>').append(unassignedRDSData.resources[i].resourceDetails.region);
+                $tr.append($tdRegion);
+                //creating td for InstanceClass..
+                var $tdInstanceClass = $('<td></td>').append(unassignedRDSData.resources[i].resourceDetails.dbInstanceClass);
+                $tr.append($tdInstanceClass);
+
+                var $tdMultiAZ;
+                var multiAZ = unassignedRDSData.resources[i].resourceDetails.multiAZ
+                if(multiAZ === false){
+                    $tdMultiAZ = $('<td>false</td>');
+                }
+                else{
+                    $tdMultiAZ = $('<td></td>').append(multiAZ);
+                }
+                $tr.append($tdMultiAZ);
+                //creating td for Instance Created On
+                var createdOn = unassignedRDSData.resources[i].resourceDetails.dbInstanceCreatedOn;
+                var date = new Date().setTime(createdOn.timestamp);
+                var taskTimestamp = new Date(createdOn).toLocaleString(); //converts to human readable strings
+                var $tdInstanceCreatedOn = $('<td></td>').append(taskTimestamp);
+                $tr.append($tdInstanceCreatedOn);
+                $tbody.append($tr);
+                $rdsUnAssignedDatatable.row.add($tr).draw();
+            }
+        }
+
+        //loading unAssigned S3 data
+        function loadUnassignedS3Data(unassignedS3Data){
+            $s3UnAssignedDatatable.clear().draw();
+            for (var i = 0; i < unassignedS3Data.resources.length; i++) {
+                var $tbody = $('#unassignedS3ListTable tbody').empty();
+                var $tr = $('<tr></tr>').attr({"s3Id" : unassignedS3Data.resources[i]._id});
+                var $tdS3Bucket = $('<td></td>').append(unassignedS3Data.resources[i].resourceDetails.bucketName);
+                $tr.append($tdS3Bucket);
+
+                var $tdS3BucketOwner = $('<td></td>').append(unassignedS3Data.resources[i].resourceDetails.bucketOwnerName);
+                $tr.append($tdS3BucketOwner);
+
+                var $tdOrgName = $('<td></td>').append(unassignedS3Data.resources[i].masterDetails.orgName);
+                $tr.append($tdOrgName);
+                var $tdBucketSize = $('<td></td>').append(unassignedS3Data.resources[i].resourceDetails.bucketSize);
+                $tr.append($tdBucketSize);
+                var createdOn = unassignedS3Data.resources[i].resourceDetails.bucketCreatedOn;
+                var date = new Date().setTime(createdOn.timestamp);
+                var taskTimestamp = new Date(createdOn).toLocaleString(); //converts to human readable strings
+                var $tdBucketCreatedOn = $('<td></td>').append(taskTimestamp);
+                $tr.append($tdBucketCreatedOn);
+
+                $tbody.append($tr);
+                $s3UnAssignedDatatable.row.add($tr).draw();
+            }
+        }
+
+
+
+        //get Managed Instance Data
         function getManagedInstances() {
             $.get('/providers/' + urlproviderId + '/managedInstances', function(managedInstances) {
                 loadManagedInstances(managedInstances);
@@ -1373,14 +1563,14 @@
             });
         }
 
-        //loading Assigned Data
+        //get Assigned Instance Data
         function getUnmanagedInstances() {
             $.get('/providers/' + urlproviderId + '/unmanagedInstances', function(unmanagnedInstances) {
                 if(unmanagnedInstances){
                     loadUnmanagedInstances(unmanagnedInstances);
                 }
             }).fail(function(jxhr) {
-                var msg = "Provider Sync Behaved Unexpectedly.";
+                var msg = "Provider Sync unmanaged instances Behaved Unexpectedly.";
                 if (jxhr.responseJSON && jxhr.responseJSON.message) {
                     msg = jxhr.responseJSON.message;
                 } else if (jxhr.responseText) {
@@ -1392,9 +1582,41 @@
 
         //loading UnAssigned Data
         function getUnassignedInstances() {
-            $.get('/providers/'+ urlproviderId +'/unassigned-instances', function(unassignedInstances) {   
+
+            $.get('/providers/'+ urlproviderId +'/tag-mappings', function(tagsListSelected) {
+                if(tagsListSelected){
+                    var envprojMappingObject = {};
+                    var catalystEntityProjName = $('#projectnameLabelId').attr('catalystEntitytype');
+                    var catalystEntityEnvName = $('#envnameLabelId').attr('catalystEntitytype');
+
+                    for(var i=0;i<tagsListSelected.length;i++){
+                        var objcatalystEntityType = tagsListSelected[i].catalystEntityType;
+                        var objtagName = tagsListSelected[i].tagName;
+
+                        //Creating an object to map with unassigned instances(To get data for project and environment in every row)
+                        if(objcatalystEntityType == catalystEntityProjName){
+                            envprojMappingObject['project'] = objtagName;
+                        }
+                        if(objcatalystEntityType == catalystEntityEnvName){
+                            envprojMappingObject['environment'] = objtagName;
+                        }
+                    }
+                    getunassignedInstanceswithProjectandEnv(envprojMappingObject);
+                }
+            }).fail(function(jxhr) {
+                var msg = "Tag mappings not loaded as behaved unexpectedly.";
+                if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                    msg = jxhr.responseJSON.message;
+                } else if (jxhr.responseText) {
+                    msg = jxhr.responseText;
+                }
+                bootbox.alert(msg);
+            });
+        }
+        function getunassignedInstanceswithProjectandEnv(envprojMappingObject){
+            $.get('/providers/'+ urlproviderId +'/unassigned-instances', function(unassignedInstances) {
                 if(unassignedInstances){
-                    loadUnassignedInstances(unassignedInstances);
+                    loadUnassignedInstances(unassignedInstances,envprojMappingObject);
                 }
             }).fail(function(jxhr) {
                 var msg = "Unassigned Instances Behaved Unexpectedly.";
@@ -1405,39 +1627,74 @@
                 }
                 bootbox.alert(msg);
             });
-            /*var unassignedInstances = {
-                "instances": [{
-                        "_id": "57039167c6441f419c97a73d",
-                        "orgId": "46d1da9a-d927-41dc-8e9e-7e926d927537",
-                        "provider": {
-                            "id": "57024031cd01705251922666",
-                            "type": "AWS",
-                            "data": {}
-                        },
-                        "platformId": "i-48b276cc",
-                        "os": "linux",
-                        "state": "running",
-                        "tags": {}
-                    },
-                    {
-                        "_id": "57039167c6441f419c97a73e",
-                        "orgId": "46d1da9a-d927-41dc-8e9e-7e926d927537",
-                        "provider": {
-                            "id": "57024031cd01705251922666",
-                            "type": "AWS",
-                            "data": {}
-                        },
-                        "platformId": "i-d09b2754",
-                        "os": "linux",
-                        "state": "running",
-                        "tags": {}
-                    }],
-                "count": 2,
-                "pageSize": 10,
-                "pageIndex": 1
-            };
-            loadUnassignedInstances(unassignedInstances);*/
         }
+        function getUnassignedRDSData(){
+            $.get('/resources?filterBy=providerId:'+ urlproviderId +'+resourceType:RDS+category:unassigned', function(unassignedRDS) {
+                if(unassignedRDS){
+                    loadUnassignedRDSData(unassignedRDS);
+                }
+            }).fail(function(jxhr) {
+                var msg = "Unassigned Instances Behaved Unexpectedly.";
+                if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                    msg = jxhr.responseJSON.message;
+                } else if (jxhr.responseText) {
+                    msg = jxhr.responseText;
+                }
+                bootbox.alert(msg);
+            });
+        }
+        function getUnassignedS3Data(){
+            $.get('/resources?filterBy=providerId:'+ urlproviderId +'+resourceType:S3+category:unassigned', function(unassignedS3) {
+                if(unassignedS3){
+                    loadUnassignedS3Data(unassignedS3);
+                }
+            }).fail(function(jxhr) {
+                var msg = "Unassigned Instances Behaved Unexpectedly.";
+                if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                    msg = jxhr.responseJSON.message;
+                } else if (jxhr.responseText) {
+                    msg = jxhr.responseText;
+                }
+                bootbox.alert(msg);
+            });
+        }
+
+        $('#unassignedSyncBtn').on('click', function(e) {
+            var updateInstanceTagsObj = {};
+            var updateInstanceTagsArr = [];
+            $('#unassignedinstanceListTable').find('tbody tr').filter(':has(:checkbox:checked)').each(function() {
+                //Batch update instances tags
+                var updateUniqueInstanceTagsObj = {};
+                var instanceid = $(this).attr("instanceid");
+                var projecttagsmapname = $(this).attr("projecttagsmapname");
+                var envtagsmapname = $(this).attr("envtagsmapname");
+
+                var projectTagName = $(this).find('.projectTagName').val();
+                var envTagName = $(this).find('.envTagName').val();
+
+                updateUniqueInstanceTagsObj["id"] = instanceid;
+                updateUniqueInstanceTagsObj["tags"] = {};
+                updateUniqueInstanceTagsObj["tags"][projecttagsmapname] = projectTagName;
+                updateUniqueInstanceTagsObj["tags"][envtagsmapname] = envTagName;
+
+                updateInstanceTagsArr.push(updateUniqueInstanceTagsObj);
+            });
+            updateInstanceTagsObj["instances"] = updateInstanceTagsArr;
+            $.ajax({
+                url: '/providers/'+urlproviderId+'/unassigned-instances',
+                data: JSON.stringify(updateInstanceTagsObj),
+                type: 'PATCH',
+                contentType: "application/json",
+                success: function(data) {
+                    $('.margintop-25left250').fadeIn();
+                    $('#spanunassignedformSaveId').text('Updated successfully');
+                    $('.margintop-25left250').delay(2000).fadeOut();
+                },
+                error: function(jqxhr) {
+
+                }
+            });
+        });
 
         $('.importNodesBtn').click(function(e) {
             var $checkBoxes = $('.nodeCheckBox:checked');
@@ -1445,15 +1702,18 @@
             reqBody.orgId = $orgListInput.val();
             reqBody.bgId = $bgList.val();
             reqBody.projectId = $projectList.val();
-            //Added By Durgesh For Project Name
-            reqBody.projectName = $projectList.find('option:selected').text();
-            //End By Durgesh
             reqBody.envId = $envList.val();
+            //Added By Durgesh
+            reqBody.orgName = $orgListInput.find('option:selected').text();
+            reqBody.bgName = $bgList.find('option:selected').text();
+            reqBody.projectName = $projectList.find('option:selected').text();
+            reqBody.environmentName = $envList.find('option:selected').text();
+            //End By Durgesh
             reqBody.configManagmentId = $infraManagerList.val();
 
 
             if (!((reqBody.bgId && reqBody.bgId.length) && (reqBody.projectId && reqBody.projectId.length) && reqBody.projectId !== 'choose' && reqBody.bgId !== 'choose')) {
-                alert('Please Select a Business Group & Project');
+                bootbox.alert('Please Select a Business Group & Project');
                 return;
             }
 
@@ -1469,22 +1729,22 @@
             if (!($dropdown.val() === 'pemFile')) {
                 reqBody.credentials.password = $('#importPasswordInput').val();
                 if (!reqBody.credentials.username) {
-                    alert('Please Enter Username');
+                    bootbox.alert('Please Enter Username');
                     return;
                 }
                 if (!reqBody.credentials.password) {
-                    alert('Please Enter Password or Choose a Pem file');
+                    bootbox.alert('Please Enter Password or Choose a Pem file');
                     return;
                 }
                 makeRequest();
             } else {
                 var pemFileInput = $('#importPemfileInput').get(0);
                 if (!reqBody.credentials.username) {
-                    alert('Please Enter Username');
+                    bootbox.alert('Please Enter Username');
                     return;
                 }
                 if (!pemFileInput.files.length) {
-                    alert('Please Choose a Pem file');
+                    bootbox.alert('Please Choose a Pem file');
                     return;
                 }
                 var reader = new FileReader();
@@ -1502,10 +1762,7 @@
             function makeRequest() {
                 $('#saveSpinner').removeClass('hidden');
                 $('.importNodesBtn').attr('disabled', 'disabled');
-                console.log("Arab");
-                console.log(reqBody);
                 $.post('../providers/' + urlproviderId + '/sync', reqBody, function(data) {
-                    console.log(data);
                     $('#providerSyncModal').modal('hide');
                     var $chefResultModalContainer = $('#providerSyncResultModal');
                     var $modalBody = $chefResultModalContainer.find('.modal-body');
@@ -1528,7 +1785,6 @@
                     function pollTaskStatus(taskId, timestamp) {
                         timeout = setTimeout(function() {
                             $.get('../taskstatus/' + taskId + '/status?timestamp=' + timestamp, function(data) {
-                                console.log(data);
                                 if (!data.completed) {
                                     if (data.statusList && data.statusList.length) {
 

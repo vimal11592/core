@@ -45,15 +45,13 @@ var imageSchema = new Schema({
     imageIdentifier: {
         type: String,
         required: true,
-        trim: true,
-        validate: schemaValidator.imageIdValidator
+        trim: true
     },
     name: {
         type: String,
         required: true,
         trim: true,
-        unique: true,
-        validate: schemaValidator.imageNameValidator
+        unique: true
     },
     osType: {
         type: String,
@@ -241,6 +239,27 @@ imageSchema.statics.getImageByProviderId = function(providerId, callback) {
             callback(null, images);
         } else {
             logger.debug("Exit getImageByProviderId with no Image present");
+            callback(null, null);
+        }
+
+    });
+};
+
+imageSchema.statics.getImageNameById = function(imageId, callback) {
+    logger.debug("Enter getImageNameById");
+    this.find({
+        "_id": new ObjectId(imageId)},{name:1, _id:0}, function(err, imageName) {
+        if (err) {
+            logger.error(err);
+            logger.debug("Exit getImageNameById with error");
+            callback(err, null);
+            return;
+        }
+        if (imageName.length) {
+            logger.debug("Exit getImageNameById with Image present");
+            callback(null, imageName[0].name);
+        } else {
+            logger.debug("Exit getImageNameById with no Image present");
             callback(null, null);
         }
 

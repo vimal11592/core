@@ -1,18 +1,18 @@
 /*
-Copyright [2016] [Relevance Lab]
+ Copyright [2016] [Relevance Lab]
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 
 //var logger = require('_pr/logger')(module);
@@ -29,12 +29,17 @@ function getDefaultsConfig() {
             express_sid_key: 'express.sid',
             sessionSecret: 'sessionSekret'
         },
+        jwt: {
+            secret: "jwtSecr3t",
+            expiresInSec: 604800
+        },
         catalystAuthHeaderName: 'x-catalyst-auth',
         app_run_port: 3001,
         catalystDataDir: currentDirectory + '/catdata',
         catalysHomeDirName: 'catalyst',
         instancePemFilesDirName: 'instance-pemfiles',
         tempDirName: 'temp',
+        scriptDirName :'scriptDir',
         staticUploadDir: '/var/chef/cache/uploads',
         app_run_secure_port: 443,
         cryptoSettings: {
@@ -61,6 +66,37 @@ function getDefaultsConfig() {
                 return config.catalystHome + this.cookbooksDirName + "/";
             }
         },
+        constantData: {
+            common_field: ['envId', 'providerId', 'orgId', 'bgId', 'projectId'],
+            sort_field: ['name', 'description'],
+            filterReferanceData: {
+                "unmanagedInstances": [{
+                    "state": "running"
+                }, {
+                    "os": "linux"
+                }],
+                "managedInstances": [{
+                    "instanceState": "running"
+                }]
+            },
+            sort_order : "desc",
+            sortReferanceData : {
+                "unmanagedInstances" : "state",
+                "managedInstances" : "instanceState",
+                "instances" : "instanceCreatedOn",
+                "tasks" : "taskCreatedOn",
+                "applications" : "name",
+                "azureArms" : "status",
+                "containerList" : "Status",
+                "cftList" : "status",
+                "appDeploy" : "envId",
+                "trackedInstances": "providerType",
+                "resources":"createdOn"
+            },
+            skip_Records : 1,
+            max_record_limit : 100000,
+            record_limit : 100000
+        },
         puppet: {
             puppetReposDirName: 'puppet-repos',
 
@@ -71,6 +107,8 @@ function getDefaultsConfig() {
         },
         aws: {
             pemFileLocation: __dirname + '/app/config/',
+            s3BucketDownloadFileLocation: currentDirectory + '/catdata/catalyst/temp/',
+            s3BucketFileName:'rlBilling.zip',
             pemFile: "catalyst.pem",
             instanceUserName: "root",
             virtualizationType: [{
@@ -127,7 +165,41 @@ function getDefaultsConfig() {
 
                 os_name: "Ubuntu",
                 osType: "linux"
-            }]
+            }],
+
+            cwMetricsUnits: {
+                CPUCreditUsage: 'Count',
+                CPUCreditBalance: 'Count',
+                CPUUtilization: 'Percent',
+                DiskReadOps: 'Count',
+                DiskWriteOps: 'Count',
+                DiskReadBytes: 'Megabytes',
+                DiskWriteBytes: 'Megabytes',
+                NetworkIn: 'Megabytes',
+                NetworkOut: 'Megabytes',
+                BucketSizeBytes:"Bytes",
+                NumberOfObjects:"Count",
+                NetworkPacketsIn: 'Count',
+                NetworkPacketsOut: 'Count',
+                StatusCheckFailed: 'Count',
+                StatusCheckFailed_Instance: 'Count',
+                StatusCheckFailed_System: 'Count'
+            },
+
+            cwMetricsDisplayUnits: {
+                CPUUtilization: 'Percent',
+                DiskReadOps: 'Count',
+                DiskWriteOps: 'Count',
+                DiskReadBytes: 'MB',
+                DiskWriteBytes: 'MB',
+                NetworkIn: 'MB',
+                NetworkOut: 'MB'
+            },
+            costData:{
+                regions:['us-east-1','us-west-2','us-west-1','eu-west-1','eu-central-1','ap-southeast-1','ap-northeast-1','ap-southeast-2','sa-east-1'],
+                productName1:['Amazon Elastic Compute Cloud','Amazon RDS Service','Amazon Redshift','Amazon ElastiCache'],
+                productName2:['Amazon CloudFront','Amazon Route 53','Amazon Simple Storage Service','Amazon Virtual Private Cloud']
+            }
         },
         vmware: {
             serviceHost: "http://localhost:3000"
@@ -147,7 +219,7 @@ function getDefaultsConfig() {
         },
         maxInstanceCount: 0,
 
-       // cronjobTimeDelay: '"* * * * * *"',
+        // cronjobTimeDelay: '"* * * * * *"',
 
         //getter methods
         get catalystHome() {
@@ -159,6 +231,9 @@ function getDefaultsConfig() {
         },
         get tempDir() {
             return this.catalystHome + this.tempDirName + "/";
+        },
+        get scriptDir() {
+            return this.catalystHome + this.scriptDirName + "/";
         }
     };
     return config;
@@ -225,7 +300,7 @@ function parseArguments() {
 }
 
 function getConfig(config, options) {
-    //parsing arguments 
+    //parsing arguments
     if (options['catalyst-port']) {
         var catalystPort = parseInt(options['catalyst-port']);
         if (catalystPort) {
@@ -261,7 +336,7 @@ function installPackageJson() {
             console.log("Installation Successfull.");
             process.exit(0);
         } else {
-            console.log("Error occured while installing packages from package.json");
+            console.log("Error occured while installing packages from apidoc.json");
             process.exit(1);
         }
     });
@@ -276,7 +351,7 @@ function restoreSeedData(config, callback) {
             return;
         }
         db.dropDatabase();
-        
+
         var procMongoRestore = spawn('mongorestore', ['--host', config.db.host, '--port', config.db.port, '--db', config.db.dbName, '--drop', '../seed/mongodump/devops_new/']);
         procMongoRestore.on('error', function(mongoRestoreError) {
             console.error("mongorestore error ==> ", mongoRestoreError);
@@ -382,11 +457,11 @@ proc.on('close', function(code) {
             fsExtra.emptydirSync(config.catalystDataDir);
             restoreSeedData(config, function() {
                 /*if (options['ldap-user']) {
-                    setupLdapUser(config, function() {
-                        createConfigFile(config);
-                        installPackageJson();
-                    });
-                } else {*/
+                 setupLdapUser(config, function() {
+                 createConfigFile(config);
+                 installPackageJson();
+                 });
+                 } else {*/
                 createConfigFile(config);
                 installPackageJson();
                 //}

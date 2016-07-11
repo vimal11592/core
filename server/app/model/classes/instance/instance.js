@@ -1,28 +1,28 @@
 /*
-Copyright [2016] [Relevance Lab]
+ Copyright [2016] [Relevance Lab]
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 var ObjectId = require('mongoose').Types.ObjectId;
 var schemaValidator = require('./../../dao/schema-validator');
 var uniqueValidator = require('mongoose-unique-validator');
 var logger = require('_pr/logger')(module);
-var ChefClientExecution = require('./chefClientExecution/chefClientExecution');
 var textSearch = require('mongoose-text-search');
-
+var apiUtils = require('_pr/lib/utils/apiUtil.js');
 
 var Schema = mongoose.Schema;
 
@@ -118,11 +118,21 @@ var InstanceSchema = new Schema({
         trim: true,
         validate: schemaValidator.orgIdValidator
     },
+    orgName: {
+        type: String,
+        required: false,
+        trim: true
+    },
     bgId: {
         type: String,
         required: true,
         trim: true,
         validate: schemaValidator.bgIdValidator
+    },
+    bgName: {
+        type: String,
+        required: false,
+        trim: true
     },
     projectId: {
         type: String,
@@ -182,7 +192,7 @@ var InstanceSchema = new Schema({
     users: [{
         type: String,
         trim: true,
-       //required: true,
+        //required: true,
         validate: schemaValidator.catalystUsernameValidator
     }],
     hardware: {
@@ -254,12 +264,30 @@ var InstanceSchema = new Schema({
     taskIds: [String],
     tempActionLogId: String,
     cloudFormationId: String,
-    armId: String
-
+    armId: String,
+    instanceCreatedOn: {
+        type: Date,
+        default: Date.now
+    },
+    tasks: [Schema.Types.Mixed],
+    usage: Schema.Types.Mixed,
+    cost: Schema.Types.Mixed,
+    normalized: String,
+    region: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    zone: {
+        type: String,
+        required: false,
+        trim: true
+    }
 });
 
 InstanceSchema.plugin(uniqueValidator);
 InstanceSchema.plugin(textSearch);
+InstanceSchema.plugin(mongoosePaginate);
 InstanceSchema.index({
     "$**": "text"
 });
@@ -267,7 +295,7 @@ InstanceSchema.index({
 var Instances = mongoose.model('instances', InstanceSchema);
 
 var InstancesDao = function() {
-	
+
     this.searchInstances = function(searchquery, options, callback) {
         logger.debug("Enter searchInstances query - (%s)", searchquery);
         Instances.textSearch(searchquery, options, function(err, data) {
@@ -416,28 +444,106 @@ var InstancesDao = function() {
         });
     };
 
-    this.getInstancesByOrgBgProjectAndEnvId = function(orgId, bgId, projectId, envId, instanceType, userName, callback) {
-        logger.debug("Enter getInstancesByOrgBgProjectAndEnvId (%s,%s, %s, %s, %s, %s)", orgId, bgId, projectId, envId, instanceType, userName);
+    this.getInstancesByOrgBgProjectAndEnvId = function(jsonData, callback) {
+        if (jsonData.pageSize) {
+            jsonData['searchColumns'] = ['instanceIP', 'instanceState'];
+            apiUtils.databaseUtil(jsonData, function(err, databaseCall) {
+                if (err) {
+                    var err = new Error('Internal server error');
+                    err.status = 500;
+                    return callback(err);
+                } else {
+                    Instances.paginate(databaseCall.queryObj, databaseCall.options, function(err, instances) {
+                        if (err) {
+                            var err = new Error('Internal server error');
+                            err.status = 500;
+                            return callback(err);
+                        } else if (instances.docs.length === 0) {
+                            return callback(null,instances);
+                        } else {
+                            // @TODO Workaround to avoid circular dependency to be addressed
+                            var tasks = require('_pr/model/classes/tasks/tasks.js');
+                            var instanceList = instances.docs;
+                            var count = 0;
+                            for (var i = 0; i < instanceList.length; i++) {
+                                (function(instance) {
+                                    if (instance.taskIds.length > 0) {
+                                        tasks.getTaskByIds(instance.taskIds, function(err, tasks) {
+                                            if (err) {
+                                                var err = new Error('Internal server error');
+                                                err.status = 500;
+                                                return callback(err);
+                                            } else if (tasks.length === 0) {
+                                                return callback(null, instances);
+                                            } else {
+                                                count++;
+                                                var taskObj = {};
+                                                var taskList = [];
+                                                for (var j = 0; j < tasks.length; j++) {
+                                                    taskObj['id'] = tasks[j]._id;
+                                                    taskObj['taskName'] = tasks[j].name;
+                                                    taskObj['taskType'] = tasks[j].taskType;
+                                                    taskObj['taskConfig'] = tasks[j].taskConfig;
+                                                    taskList.push(taskObj);
+                                                    taskObj = {};
+                                                };
+                                                instance['tasks'] = taskList;
+                                                if (instanceList.length === count) {
+                                                    instances.docs = instanceList;
+                                                    return callback(null, instances);
+                                                }
+                                            }
+                                        })
+                                    } else {
+                                        count++;
+                                        if (instanceList.length === count) {
+                                            instances.docs = instanceList;
+                                            return callback(null, instances);
+                                        }
+                                    }
+                                })(instanceList[i]);
+                            }
+
+                        }
+                    });
+                }
+            });
+        } else {
+            var queryObj = {
+                orgId: jsonData.orgId,
+                bgId: jsonData.bgId,
+                projectId: jsonData.projectId,
+                envId: jsonData.envId
+            }
+            if (jsonData.instanceType) {
+                queryObj['blueprintData.templateType'] = jsonData.instanceType;
+            }
+            Instances.find(queryObj, {
+                'actionLogs': false
+            }, function(err, data) {
+                if (err) {
+                    callback(err, null);
+                    return;
+                }
+                callback(null, data);
+            });
+        }
+    };
+
+    this.getInstancesByOrgBgProjectAndEnvIdForDocker = function(jsonData, callback) {
         var queryObj = {
-            orgId: orgId,
-            bgId: bgId,
-            projectId: projectId,
-            envId: envId
+            orgId: jsonData.orgId,
+            bgId: jsonData.bgId,
+            projectId: jsonData.projectId,
+            envId: jsonData.envId
         }
-        if (instanceType) {
-            queryObj['blueprintData.templateType'] = instanceType;
-        }
-        Instances.find(queryObj, {
-            'actionLogs': false
-        }, function(err, data) {
+        Instances.find(queryObj, function(err, instances) {
             if (err) {
-                logger.error("Failed to getInstancesByOrgBgProjectAndEnvId (%s,%s, %s, %s, %s, %s)", orgId, bgId, projectId, envId, instanceType, userName, err);
+                logger.error("Failed to getInstancesByOrgBgProjectAndEnvIdForDocker", err);
                 callback(err, null);
                 return;
             }
-
-            logger.debug("Exit getInstancesByOrgBgProjectAndEnvId (%s,%s, %s, %s, %s, %s)", orgId, bgId, projectId, envId, instanceType, userName);
-            callback(null, data);
+            callback(null, instances);
         });
     };
 
@@ -555,6 +661,18 @@ var InstancesDao = function() {
             callback(null, data);
         });
 
+    };
+
+    this.getAll = function getAll(query, callback) {
+        Instances.find(query,
+            function(err, instances) {
+                if (err) {
+                    return callback(err);
+                } else {
+                    return callback(null, instances);
+                }
+            }
+        );
     };
 
     this.findByProviderId = function(providerId, callback) {
@@ -1156,7 +1274,7 @@ var InstancesDao = function() {
     };
 
 
-    //action logs 
+    //action logs
     function insertActionLog(instanceId, logData, callback) {
         var actionLog = new ActionLog(logData);
         Instances.update({
@@ -1560,34 +1678,29 @@ var InstancesDao = function() {
         });
     };
 
-    this.getByProviderId = function(providerId, callback) {
-        if (!providerId) {
-            process.nextTick(function() {
-                callback({
-                    message: "Invalid provider id"
-                });
-
-            });
-            return;
-        }
-
-        Instances.find({
-            "providerId": providerId
-        }, {
-            'actionLogs': false
-        }, function(err, instances) {
+    this.getByProviderId = function(jsonData, callback) {
+        jsonData['searchColumns'] = ['instanceIP', 'platformId'];
+        apiUtils.databaseUtil(jsonData, function(err, databaseCall) {
             if (err) {
-                logger.error("Failed getByOrgProviderId (%s)", opts, err);
-                callback(err, null);
+                process.nextTick(function() {
+                    callback(null, []);
+                });
                 return;
+            } else {
+                Instances.paginate(databaseCall.queryObj, databaseCall.options, function(err, instances) {
+                    if (err) {
+                        logger.error("Failed getByProviderId (%s)", err);
+                        callback(err, null);
+                        return;
+                    }
+                    callback(null, instances);
+                });
             }
-
-            callback(null, instances);
-
         });
     };
+    //End By Durgesh
 
-    this.getInstanceByIPAndProject = function(instanceIp,projectId, callback) {
+    this.getInstanceByIPAndProject = function(instanceIp, projectId, callback) {
         instanceIp = instanceIp.trim();
         Instances.find({
             "instanceIP": instanceIp,
@@ -1613,22 +1726,163 @@ var InstancesDao = function() {
                     "instanceIP": instanceIp
                 }, function(err, data) {
                     count++;
-                    if(data && data.length){
+                    if (data && data.length) {
                         instanceIds.push(data[0]._id);
                     }
-                    if(count === instanceIps.length){
+                    if (count === instanceIps.length) {
                         callback(null, instanceIds);
                         return;
                     }
                 });
             }
-        }else{
-            callback(null,[]);
+        } else {
+            callback(null, []);
             return;
         }
     };
 
+    this.getInstancesByIDs = function(instanceIds, callback) {
+        if (instanceIds.length) {
+            Instances.find({
+                "_id": {
+                    $in: instanceIds
+                },
+            }, function(err, instances) {
+                if (err) {
+                    logger.error("Failed getInstancesByIDs " + err);
+                    callback(err, null);
+                    return;
+                }
+                callback(null, instances);
+
+            })
+        } else {
+            callback(null, []);
+            return;
+        }
+    };
+
+    this.updateInstanceUsage = function(instanceId, usage, callback) {
+        Instances.update({
+            _id: new ObjectId(instanceId)
+        }, {
+            $set: {
+                usage: usage
+            }
+        }, {
+            upsert: false
+        }, function(err, data) {
+            if (err) {
+                return callback(err, null);
+            } else {
+                callback(null, data);
+            }
+        });
+    };
+
+    this.updateInstanceCost = function(instanceCostData, callback) {
+        Instances.update({
+            platformId: instanceCostData.resourceId
+        }, {
+            $set: {
+                cost: instanceCostData.cost
+            }
+        }, {
+            upsert: false
+        }, function(err, data) {
+            if (err) {
+                return callback(err, null);
+            } else {
+                callback(null, data);
+            }
+        });
+    };
+
+    this.NormalizedInstances=function(jsonData,fieldName,callback){
+        var queryObj={};
+        if(jsonData.filterBy){
+            queryObj = jsonData.filterBy;
+        }
+        queryObj['orgId']= jsonData.orgId;
+        queryObj['bgId']= jsonData.bgId;
+        queryObj['projectId']= jsonData.projectId;
+        queryObj['envId']= jsonData.envId;
+        Instances.find(queryObj,function(err,instances){
+            if(err){
+                logger.error(err);
+                callback(err, null);
+                return;
+            }
+            var count=0;
+            for(var i =0;i < instances.length;i++) {
+                (function(instance){
+                    count++;
+                    var normalized=instance[fieldName];
+                    Instances.update({
+                        "_id": new ObjectId(instance._id)
+                    }, {
+                        $set: {
+                            normalized: normalized.toLowerCase()
+                        }
+                    }, {
+                        upsert: false
+                    },function(err,updatedInstance){
+                        if(err){
+                            logger.error(err);
+                            callback(err, null);
+                            return;
+                        }
+                        if(instances.length === count){
+                            callback(null,updatedInstance);
+                        }
+                    });
+                })(instances[i]);
+            }
+        })
+    };
+
+    this.searchByChefServerAndNodeNames = function(chefServerId, nodesName, callback) {
+        logger.debug('chefServerId ==>', chefServerId);
+        logger.debug('nodesName ==>', nodesName);
+
+        Instances.find({
+            "chef.serverId": chefServerId,
+            "chef.chefNodeName": {
+                '$in': nodesName
+            }
+        }, function(err, instances) {
+            if (err) {
+                logger.error("Failed searchByChefServerAndNodeNames ", err);
+                callback(err, null);
+                return;
+            }
+            callback(null, instances);
+
+        });
+
+    };
+
+    this.searchByChefServerNodeNamesAndEnvId = function(chefServerId, nodesName, envId, callback) {
+        logger.debug('chefServerId ==>', chefServerId);
+        logger.debug('nodesName ==>', nodesName);
+
+        Instances.find({
+            "envId":envId,
+            "chef.serverId": chefServerId,
+            "chef.chefNodeName": {
+                '$in': nodesName
+            }
+        }, function(err, instances) {
+            if (err) {
+                logger.error("Failed searchByChefServerAndNodeNames ", err);
+                callback(err, null);
+                return;
+            }
+            callback(null, instances);
+
+        });
+
+    }
 };
 
 module.exports = new InstancesDao();
-

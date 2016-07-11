@@ -213,12 +213,17 @@ openstackInstanceBlueprintSchema.methods.launch = function(launchParams, callbac
             var instance = {
                 name: launchparamsOpenstack.server.name,
                 orgId: launchParams.orgId,
+                orgName:launchParams.orgName,
                 bgId: launchParams.bgId,
+                bgName: launchParams.bgName,
                 projectId: launchParams.projectId,
+                projectName: launchParams.projectName,
                 envId: launchParams.envId,
+                environmentName: launchParams.envName,
                 providerId: self.cloudProviderId,
                 providerType: self.cloudProviderType,
                 keyPairId: 'unknown',
+                region:self.region,
                 chefNodeName: instanceData.server.id,
                 runlist: paramRunList,
                 platformId: instanceData.server.id,
@@ -548,6 +553,7 @@ openstackInstanceBlueprintSchema.statics.createNew = function(awsData) {
         imageId: awsData.instanceImageID,
         network: awsData.network,
         subnet: awsData.subnet,
+        securityGroupIds: awsData.securityGroupIds,
 
         //dataStore: awsData.dataStore,
         cloudProviderType: awsData.cloudProviderType

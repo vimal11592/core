@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 var ObjectId = require('mongoose').Types.ObjectId;
 var logger = require('_pr/logger')(module);
+var ApiUtils = require('_pr/lib/utils/apiUtil.js');
 var Schema = mongoose.Schema;
 
 var UnmanagedInstanceSchema = new Schema({
@@ -14,6 +16,7 @@ var UnmanagedInstanceSchema = new Schema({
 		required: false,
 		trim: true
 	},
+	orgName: String,
 	projectId: String,
 	projectName: String,
 	environmentId: String,
@@ -29,8 +32,10 @@ var UnmanagedInstanceSchema = new Schema({
 	os: String,
 	state: String,
 	tags: Schema.Types.Mixed,
+	usage: Schema.Types.Mixed,
+	cost: Schema.Types.Mixed
 });
-
+UnmanagedInstanceSchema.plugin(mongoosePaginate);
 
 UnmanagedInstanceSchema.statics.createNew = function createNew(data, callback) {
 	var self = this;
@@ -70,6 +75,18 @@ UnmanagedInstanceSchema.statics.updateInstance = function updateInstance(instanc
 };
 //End By Durgesh
 
+UnmanagedInstanceSchema.statics.getAll = function getAll(query, callback) {
+	this.find(query,
+		function(err, instances) {
+			if (err) {
+				return callback(err);
+			} else {
+				return callback(null, instances);
+			}
+		}
+	);
+};
+
 UnmanagedInstanceSchema.statics.getByOrgProviderId = function(opts, callback) {
 
 	this.find({
@@ -96,7 +113,6 @@ UnmanagedInstanceSchema.statics.getInstanceTagByOrgProviderId = function(opts,ca
 			callback(err, null);
 			return;
 		}
-		console.log(instancesTag);
 		callback(null, instancesTag);
 
 	});
@@ -104,28 +120,42 @@ UnmanagedInstanceSchema.statics.getInstanceTagByOrgProviderId = function(opts,ca
 
 
 UnmanagedInstanceSchema.statics.getByProviderId = function(jsonData, callback) {
-	if (!jsonData.providerId) {
-		process.nextTick(function() {
-			callback({
-				message: "Invalid providerId"
+	jsonData['searchColumns']=['ip','platformId'];
+	ApiUtils.databaseUtil(jsonData,function(err,databaseCall){
+		if(err){
+			process.nextTick(function() {
+				callback(null, []);
 			});
-		});
-		return;
-	}
-	var obj = {};
-	obj["providerId"] = jsonData.providerId;
-	if(jsonData.searchParameter==='undefined')
-		obj[jsonData.searchParameter]=jsonData.searchParameterValue;
-	this.find(obj, function(err, instances) {
+			return;
+		}
+		else {
+			UnmanagedInstance.paginate(databaseCall.queryObj, databaseCall.options, function (err, instances) {
+				if (err) {
+					logger.error("Failed getByOrgProviderId (%s)", err);
+					callback(err, null);
+					return;
+				}
+				callback(null, instances);
+			});
+		}
+	});
+};
+
+UnmanagedInstanceSchema.statics.getInstanceByProviderId = function(providerId, callback) {
+	logger.debug("Enter getInstanceByProviderId (%s)", providerId);
+	this.find({
+		providerId: providerId
+	}, function(err, data) {
 		if (err) {
-			logger.error("Failed getByOrgProviderId (%s)", err);
+			logger.error("Failed getInstanceByProviderId (%s)", providerId, err);
 			callback(err, null);
 			return;
 		}
-		callback(null, instances);
+		logger.debug("Exit getInstanceByProviderId (%s)", providerId);
+		callback(null, data);
+
 	});
 };
-//End By Durgesh
 
 UnmanagedInstanceSchema.statics.getInstanceTagByProviderId = function(providerIds, callback) {
 	if (!(providerIds && providerIds.length)) {
@@ -152,14 +182,6 @@ UnmanagedInstanceSchema.statics.getInstanceTagByProviderId = function(providerId
 	}).limit(jsonData.record_Limit).skip(jsonData.record_Skip).sort({state:1});
 };
 
-
-
-
-
-
-
-
-
 UnmanagedInstanceSchema.statics.getByIds = function(providerIds, callback) {
 	if (!(providerIds && providerIds.length)) {
 		process.nextTick(function() {
@@ -182,10 +204,42 @@ UnmanagedInstanceSchema.statics.getByIds = function(providerIds, callback) {
 	});
 };
 
+UnmanagedInstanceSchema.statics.updateUsage = function updateUsage(instanceId, usage, callBack) {
+	this.update({
+		_id: new ObjectId(instanceId)
+	}, {
+		$set: {usage: usage}
+	}, function(err, data) {
+		if (err) {
+			logger.error("Failed to update Unmanaged Instance data", err);
+			if (typeof callBack == 'function') {
+				callBack(err, null);
+			}
+			return;
+		}
+		if (typeof callBack == 'function') {
+			callBack(null, data);
+		}
+	});
+};
 
+UnmanagedInstanceSchema.statics.updateInstanceCost = function(instanceCostData, callback) {
+	this.update({
+		platformId: instanceCostData.resourceId
+	}, {
+		$set: {
+			cost: instanceCostData.cost
+		}
+	}, {
+		upsert: false
+	}, function(err, data) {
+		if (err) {
+			return callback(err, null);
+		} else {
+			callback(null, data);
+		}
+	});
+};
 
 var UnmanagedInstance = mongoose.model('unmanagedinstances', UnmanagedInstanceSchema);
-
-
-
 module.exports = UnmanagedInstance;
