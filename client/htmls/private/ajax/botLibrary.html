@@ -1,0 +1,1741 @@
+<div class="widget-body">
+    <div class="widget-main widgetHeight">
+        <div class="col-md-12 table-responsive tablePadding">
+            <table id="trackTable" class="tableData table table-striped table-bordered table-hover dataTable no-footer textCenter" cellpadding="5px">
+                <thead>
+                    <tr class="rowCustomStyle">
+                        <td>Bot Type</td>
+                        <td>Name</td>
+                        <td>Bot Description</td>
+                        <td>Run Bot</td>
+                        <td>History</td>
+                        <td>Last Run</td>
+                        <td>Bot Action</td>
+                    </tr>
+                </thead>
+                <tbody id="botTableInput">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--widget main ends here-->
+</div>
+<!--jenkins job history start here-->
+<div class="modal hidden" id="jenkinsJobHistory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:88%">
+        <div class="modal-content">
+            <div id='orchestrationHistoryPage'>
+                <div class="modal-header">
+                    <h5 class="modal-title jenkinsTitle" style="color:#4e5964;">
+                            <strong></strong>
+                    </h5>
+                </div>
+                <div class="modal-body" style="height:350px;overflow-y:scroll;">
+                    <div class="loadingContainer"><img class="center-block" style="height:50px;width:50px;margin-top: 10%;margin-bottom: 10%;" src="img/loading.gif" /></div>
+                    <div class="errorMsgContainer" style="font-size: 14px;height: 100px;padding-top: 10px;text-align: center;"></div>
+                    <div class="outputArea">
+                        <div class="col-md-12 table-responsive">
+                            <table id="tablehistoryTaskForJenkins" class="table table-striped table-bordered table-hover dataTable no-footer text-align-center table-condensed tablesorter" cellpadding="5px" width="100%">
+                                <thead>
+                                    <tr class="rowCustomStyle">
+                                        <td>Job Number</td>
+                                        <td>Job Output</td>
+                                        <td>Status</td>
+                                        <td>Start Time</td>
+                                        <td>End Time</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary cat-btn-close" data-dismiss="modal">
+                        <i class="fa fa-times black"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--jenkins job history ends here-->
+<!--chef history starts here-->
+<div class="modal fade hidden" id="chefJobHistory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:88%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-history" style="float:left;margin-top:6px;margin-right:7px;"></i>
+                <h5 class="modal-title chefTitle" style="color:#4e5964;">
+                </h5>
+            </div>
+            <div class="modal-body" style="height:350px;overflow-y:scroll;">
+                <div class="loadingContainer"><img class="center-block" style="height:50px;width:50px;margin-top: 10%;margin-bottom: 10%;" src="img/loading.gif" /></div>
+                <div class="errorMsgContainer" style="font-size: 14px;padding-top: 10px;text-align: center;"></div>
+                <div class="outputArea">
+                    <div class="col-lg-12 table-responsive">
+                        <table id="tablehistoryTask" class="table table-striped table-bordered table-hover dataTable no-footer text-align-center table-condensed tablesorter" cellpadding="5px" width="100%">
+                            <thead>
+                                <tr class="rowCustomStyle">
+                                    <td>Start Time</td>
+                                    <td>End Time</td>
+                                    <td>Status</td>
+                                    <td style="width: 42%">Message</td>
+                                    <td>User</td>
+                                    <td>Logs</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary cat-btn-close" data-dismiss="modal">
+                    <i class="fa fa-times black"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--chef history ends here-->
+<!--composite history starts here-->
+<div class="modal fade hidden" id="compositeJobHistory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:88%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-history" style="float:left;margin-top:6px;margin-right:7px;"></i>
+                <h5 class="modal-title compositeTitle" style="color:#4e5964;">
+                </h5>
+            </div>
+            <div class="modal-body" style="height:350px;overflow-y:scroll;">
+                <div class="loadingContainer"><img class="center-block" style="height:50px;width:50px;margin-top: 10%;margin-bottom: 10%;" src="img/loading.gif" /></div>
+                <div class="errorMsgContainer" style="font-size: 14px;height: 100px;padding-top: 10px;text-align: center;"></div>
+                <div class="outputArea">
+                    <div class="col-md-12 table-responsive">
+                        <table id="compositeTablehistoryTask" class="table table-striped table-bordered table-hover dataTable no-footer text-align-center table-condensed tablesorter" cellpadding="5px" width="100%">
+                            <thead>
+                                <tr class="rowCustomStyle">
+                                    <td>Start Time</td>
+                                    <td>End Time</td>
+                                    <td>Status</td>
+                                    <td>User</td>
+                                    <td>Logs</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary cat-btn-close" data-dismiss="modal">
+                    <i class="fa fa-times black"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--composite job history start here-->
+<!--/.modal-assignedNode-->
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="assignedNode" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                x
+                </button>
+                <h4 class="modal-title">
+                    <i class="fa fa-sitemap txt-color-blue"></i>&nbsp;&nbsp;Assigned Nodes
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form class="smart-form" id="login-form" action="" novalidate="novalidate">
+                    <fieldset style="padding-top:7px !important;">
+                        <section>
+                            <div class="">
+                                <table align="left" style="margin-left:20px;">
+                                    <thead>
+                                        <tr style="line-height:2.3">
+                                            <th style="width:100px" scope="col"><u class="font-size-12">Name</u>
+                                            </th>
+                                            <th style="width:100px" scope="col"> <u class="font-size-12">IP Address</u></th>
+                                            <th scope="col"> <u class="font-size-12">Status</u></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="taskNodeListContainer">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </fieldset>
+                    <div>
+                    </div>
+                    <footer>
+                        <button class="btn btn-primary" type="button" data-dismiss="modal">
+                        &nbsp;Close
+                        </button>
+                    </footer>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!--/.modal-assignedNode-->
+<!--/.modal-assignedRunlist-->
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="assignedRunlist" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                x
+                </button>
+                <h4 class="modal-title">
+                    <i class="fa fa-list txt-color-blue"></i>&nbsp;&nbsp;Assigned Runlists
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form class="smart-form" id="login-form" action="" novalidate="novalidate">
+                    <fieldset style="padding-top:7px !important;">
+                        <section class="col col-6">
+                            <label class="label">
+                            <img src="img/templateicons/Order-run-list---deployment.png">
+                            <strong>RunLists</strong>
+                            </label>
+                            <div class="row">
+                                <div class="col col-10">
+                                    <ul class="taskRunListContainer assignedRunlists">
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+                    <div>
+                    </div>
+                    <footer>
+                        <button class="btn btn-primary" type="button" data-dismiss="modal">
+                        &nbsp;Close
+                        </button>
+                    </footer>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!--/.modal-assignedRunlist-->
+<!--execute modal-->
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="assignedExecute" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                x
+                </button>
+                <h4 class="modal-title">
+                    <i class="fa fa-eraser txt-color-blue"></i>&nbsp;&nbsp;Execute Logs
+                </h4>
+            </div>
+            <div class="modal-body no-padding jenkinsChefModal">
+                <div class="loadingContainer"><img class="center-block" style="height:50px;width:50px;margin-top: 10%;margin-bottom: 10%;" src="img/loading.gif" /></div>
+                <div class="errorMsgContainer" style="font-size: 14px;height: 100px;padding-top: 10px;text-align: center;"></div>
+                <form class="outputArea" action="">
+                    <div role="content">
+                        <div class="widget-body">
+                            <ul id="taskExecuteTabsHeader" class="nav nav-tabs bordered">
+                            </ul>
+                            <div id="taskExecuteTabsContent" class="tab-content padding-10">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <a type="button" class="btn btn-primary" data-dismiss="modal">Close</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!--/.modal-assignedExecute-->
+<!--execute modal-->
+<div class="modal fade" id="modalForSelect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog " style="">
+        <div class="modal-content">
+            <form role="form"  id="executeJob">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        &nbsp;&nbsp;&nbsp;&nbsp;Select Choice Parameter &amp; Execute
+                    </h4>
+                </div>
+                <div class="modal-body" style="height:auto;">
+                    <table id="paramTable" class="tableData table table-striped table-bordered table-hover dataTable no-footer" cellpadding="5px" width="100%">
+                        <thead>
+                            <tr class="rowCustomStyle">
+                                <td>Name</td>
+                                <td>Value</td>
+                            </tr>
+                        </thead>
+                        <tbody id="paramTableList">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
+                    <button type="submit" id="executeBtn" class="btn btn-primary" value="Ok">Ok</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Chef Info Block : Start -->
+<div class="modal fade" id="chefInfo" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title chefTitle" style="color:#4e5964;"></h5>
+      </div>
+      <div class="modal-body">
+        <div class="loadingContainer"><img class="center-block" style="height:50px;width:50px;margin-top: 10%;margin-bottom: 10%;" src="img/loading.gif" /></div>
+        <div class="errorMsgContainer" style="font-size: 14px;padding-top: 10px;text-align: center;"></div>
+        <div class="outputArea">
+            <div class="col-lg-12 table-responsive">
+                <table id="chefJobInfo" class="table table-striped table-bordered table-hover dataTable no-footer text-align-center table-condensed tablesorter" cellpadding="5px" width="100%">
+                    <thead>
+                        <tr class="rowCustomStyle">
+                            <td>Job Name</td>
+                            <td>Node Name</td>
+                            <td>Cookbook</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary cat-btn-close" data-dismiss="modal">
+            <i class="fa fa-times black"></i> Close
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Chef Info Block : End -->
+
+<!-- Jenkin Info Block : Start -->
+<div class="modal fade" id="JenkinInfo" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title jenkinsTitle" style="color:#4e5964;"></h5>
+      </div>
+      <div class="modal-body">
+        <div class="loadingContainer" id="infoJenkinLoad"><img class="center-block" style="height:50px;width:50px;margin-top: 10%;margin-bottom: 10%;" src="img/loading.gif" /></div>
+        <div class="errorMsgContainer" style="font-size: 14px;padding-top: 10px;text-align: center;"></div>
+        <div class="outputArea">
+            <div class="col-lg-12 table-responsive">
+                <table id="jenkinJobInfo" class="table table-striped table-bordered table-hover dataTable no-footer text-align-center table-condensed tablesorter" cellpadding="5px" width="100%">
+                    <thead>
+                        <tr class="rowCustomStyle">
+                            <td>Name</td>
+                            <td>Jenkin Server</td>
+                            <td>Jenkin Job</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary cat-btn-close" data-dismiss="modal">
+            <i class="fa fa-times black"></i> Close
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Jenkin Info Block : End -->
+<!-- Script Info Block : Start -->
+<div class="modal fade" id="scriptInfo" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title chefTitle" style="color:#4e5964;"></h5>
+      </div>
+      <div class="modal-body">
+        <div class="loadingContainer"><img class="center-block" style="height:50px;width:50px;margin-top: 10%;margin-bottom: 10%;" src="img/loading.gif" /></div>
+        <div class="errorMsgContainer" style="font-size: 14px;padding-top: 10px;text-align: center;"></div>
+        <div class="outputArea">
+            <div class="col-lg-12 table-responsive">
+                <table id="scriptJobInfo" class="table table-striped table-bordered table-hover dataTable no-footer text-align-center table-condensed tablesorter" cellpadding="5px" width="100%">
+                    <thead>
+                        <tr class="rowCustomStyle">
+                            <td>Name</td>
+                            <td>Script Type</td>
+                            <td>Script Name</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary cat-btn-close" data-dismiss="modal">
+            <i class="fa fa-times black"></i> Close
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Script Info Block : End -->
+<!-- Composite Info Block : Start -->
+<div class="modal fade" id="compositeInfo" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title compositeTitle" style="color:#4e5964;"></h5>
+      </div>
+      <div class="modal-body">
+        <div class="loadingContainer"><img class="center-block" style="height:50px;width:50px;margin-top: 10%;margin-bottom: 10%;" src="img/loading.gif" /></div>
+        <div class="errorMsgContainer" style="font-size: 14px;padding-top: 10px;text-align: center;"></div>
+        <div class="outputArea">
+            <div class="col-lg-12 table-responsive">
+                <table id="compositeJobInfo" class="table table-striped table-bordered table-hover dataTable no-footer text-align-center table-condensed tablesorter" cellpadding="5px" width="100%">
+                    <thead>
+                        <tr class="rowCustomStyle">
+                            <td>Name</td>
+                            <td>Assigned Task</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary cat-btn-close" data-dismiss="modal">
+            <i class="fa fa-times black"></i> Close
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Composite Info Block : End -->
+<script>
+$('#assignedExecute').on('show.bs.modal', function() {
+    $('#tablehistoryTask').css('z-index', 1030);
+});
+
+$('#assignedExecute').on('hidden.bs.modal', function() {
+    $('#compositeTablehistoryTask').css('z-index', 1040);
+});
+
+//for jenkins
+
+$('#assignedExecute').on('show.bs.modal', function() {
+    $('#assignedTaskHistoryForJenkins').css('z-index', 1030);
+});
+//initialising the datatable...
+if (!$.fn.dataTable.isDataTable('#chefJobInfo')) {
+    var $chefJobInfo = $('#chefJobInfo').DataTable({
+        "pagingType": "full_numbers",
+        "bInfo": false,
+        "bLengthChange": false,
+        "paging": false,
+        "bFilter": false,
+        "aoColumns": [{
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }]
+
+    });
+}
+
+$('#chefJobInfo_length').hide();
+$('#chefJobInfo_filter').hide();
+
+//initialising the datatable...
+if (!$.fn.dataTable.isDataTable('#compositeJobInfo')) {
+    var $compositeJobInfo = $('#compositeJobInfo').DataTable({
+        "pagingType": "full_numbers",
+        "bInfo": false,
+        "bLengthChange": false,
+        "paging": false,
+        "bFilter": false,
+        "aoColumns": [{
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }]
+
+    });
+}
+
+$('#compositeJobInfo_length').hide();
+$('#compositeJobInfo_filter').hide();
+//initialising the datatable...
+if (!$.fn.dataTable.isDataTable('#jenkinJobInfo')) {
+    var $jenkinJobInfo = $('#jenkinJobInfo').DataTable({
+        "pagingType": "full_numbers",
+        "bInfo": false,
+        "bLengthChange": false,
+        "paging": false,
+        "bFilter": false,
+        "aoColumns": [{
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }]
+
+    });
+}
+
+$('#jenkinJobInfo_length').hide();
+$('#jenkinJobInfo_filter').hide();
+
+//initialising the datatable...
+if (!$.fn.dataTable.isDataTable('#scriptJobInfo')) {
+    var $scriptJobInfo = $('#scriptJobInfo').DataTable({
+        "pagingType": "full_numbers",
+        "bInfo": false,
+        "bLengthChange": false,
+        "paging": false,
+        "bFilter": false,
+        "aoColumns": [{
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }]
+
+    });
+}
+
+$('#scriptJobInfo_length').hide();
+$('#scriptJobInfo_filter').hide();
+
+if (!$.fn.dataTable.isDataTable('#trackTable')) {
+    var $botDatatable = $('#trackTable').DataTable({
+        "pagingType": "full_numbers",
+        "bInfo": false,
+        "bLengthChange": false,
+        "paging": false,
+        "bFilter": false,
+        "aoColumns": [{
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }, {
+            "bSortable": false
+        }]
+
+    });
+}
+$('#trackTable_length').hide();
+$('#trackTable_filter').hide();
+if (!$.fn.dataTable.isDataTable('#tablehistoryTask')) {
+    //var $taskListArea = $('.taskListArea').empty();
+    var $taskHistoryDatatable = $('#tablehistoryTask').DataTable({
+        "pagingType": "full_numbers",
+
+        "aoColumns": [
+            null, {
+                "bSortable": true
+            }, {
+                "bSortable": true
+            }, {
+                "bSortable": true
+            }, {
+                "bSortable": true
+            }, {
+                "bSortable": false
+            }
+        ]
+
+    });
+}
+
+$('#tablehistoryTask_length').hide();
+$('#tablehistoryTask_filter').hide();
+
+if (!$.fn.dataTable.isDataTable('#compositeTablehistoryTask')) {
+    var $compositeTaskHistoryDatatable = $('#compositeTablehistoryTask').DataTable({
+        "pagingType": "full_numbers",
+
+        "aoColumns": [
+            null, {
+                "bSortable": true
+            }, {
+                "bSortable": true
+            }, {
+                "bSortable": true
+            }, {
+                "bSortable": false
+            }
+        ]
+
+    });
+}
+
+$('#compositeTablehistoryTask_length').hide();
+$('#compositeTablehistoryTask_filter').hide();
+
+
+if (!$.fn.dataTable.isDataTable('#tablehistoryTaskForJenkins')) {
+    //var $taskListArea = $('.taskListArea').empty();
+    var $taskHistoryDatatableJenkins = $('#tablehistoryTaskForJenkins').DataTable({
+        "pagingType": "full_numbers",
+        "order": [
+            [0, "desc"]
+        ],
+        "aoColumns": [
+            null, {
+                "bSortable": false
+            }, {
+                "bSortable": false
+            }, {
+                "bSortable": false
+            }, {
+                "bSortable": false
+            }
+        ]
+
+    });
+}
+
+$('#tablehistoryTaskForJenkins_length').hide();
+$('#tablehistoryTaskForJenkins_filter').hide();
+
+$(document).ready(function(e) {
+    if (isAngularIntegration) {
+        $('#workZoneNew').attr('href', '#');
+        $('#workZoneNew').removeClass('active');
+        $('#Workspace1').addClass('hidden');
+        $('#serviceNew').addClass('active');
+        $('ul#Service').removeClass('hidden');
+        $('ul#Service .menu-item-parentdemo')
+        $("#ribbon ol.breadcrumb").empty();
+        var providerselected = $('#Service').attr('providerselected');
+        providerselected = providerselected.toUpperCase();
+    }
+    getGlobalBot();
+});
+
+//this is a functionality to get the list of global track items that have been created....
+function getGlobalBot() {
+    //for getting the list of tracks
+    var botUrlDetails = '/tasks/list/all';
+    $.get(botUrlDetails, function(data) {
+
+        console.log(data);
+        if (data && data.length) {
+            for (var kk = 0; kk < data.length; kk++) {
+                createTableForBot(data[kk]);
+            }
+        }
+    }).fail(function(jxhr) {
+        var msg = "Server Behaved Unexpectedly";
+        if (jxhr.responseJSON && jxhr.responseJSON.message) {
+            msg = jxhr.responseJSON.message;
+        } else if (jxhr.responseText) {
+            msg = jxhr.responseText;
+        }
+        bootbox.alert(msg);
+    });
+};
+
+function createTableForBot(botData) {
+    if (botData) {
+        var $botNameList = $('#botTableInput tbody');
+        var $tr = $('<tr class="botItemRow"></tr>').attr('data-botId', botData._id);
+        $tr.data('botData', botData);
+
+        var $tdType, $tdDescription;
+        if (botData.taskType == 'chef') {
+            $tdType = $('<td class="botType">' + "<img style='height:30px;width:30px;text-align:center;' src='/private/img/chef.png'>" + '</td>');
+            $tdDescription = $('<td class="botDescription">Chef Service Delivery Bot</td>');
+        } else if (botData.taskType == 'jenkins') {
+            $tdType = $('<td class="botType">' + "<img style='height:30px;width:30px;text-align:center;' src='/private/img/jenkins.png'>" + '</td>');
+            $tdDescription = $('<td class="botDescription">Jenkin Service Delivery Bot</td>');
+        } else if (botData.taskType == 'composite') {
+            $tdType = $('<td class="botType">' + "<img style='height:30px;width:30px;text-align:center;' src='/private/img/composite.jpg'>" + '</td>');
+            $tdDescription = $('<td class="botDescription">Composite Service Delivery Bot</td>');
+        } else if (botData.taskType == 'script') {
+            $tdType = $('<td class="botType">' + "<img style='height:30px;width:30px;text-align:center;' src='/private/img/script.jpg'>" + '</td>');
+            $tdDescription = $('<td class="botDescription">Script Service Delivery Bot</td>');
+        }
+        var $tdName = $('<td class="botName">' + botData.name + '</td>');
+        $tr.append($tdType).append($tdName).append($tdDescription);
+        var $tdExecute = $('<td style="vertical-align:inherit;text-align:center;"></td>').append('<a rel="tooltip" data-placement="top" data-original-title="Execute" data-toggle="modal" href="javascript:void(0)" class="btn btn-primary btn-sg tableactionbutton"><i class="ace-icon fa fa-play bigger-120"></i></a>');
+        $tdExecute.find('a').data('taskId', botData._id).attr('data-executeTaskId', botData._id).click(function(e, nexusData) {
+            var taskId = $(this).data('taskId');
+
+            if (botData.taskType === 'jenkins' || botData.taskType === 'chef' || botData.taskType === 'puppet' || botData.taskType === 'composite' || botData.taskType === 'script') {
+                //checking for parameterized condition..
+                if (botData.taskConfig.parameterized) {
+
+                    var $modalForSelect = $('#modalForSelect');
+                    var $tableBody = $('#paramTableList').empty();
+                    $('#executeJob').unbind('submit').bind('submit', function(e) {
+
+                        $modalForSelect.modal('hide');
+                        console.log('firing');
+                        executeJob();
+                        return false;
+                    });
+
+                    function executeJob() {
+                        var $selects = $modalForSelect.find('.modal-body select');
+                        //alert($select);
+                        var reqBody = {};
+
+                        for (var q = 0; q < $selects.length; q++) {
+                            var select = $selects[q];
+                            var $select = $(select);
+                            var name = $select.attr('key');
+                            var value = $select.val();
+                            reqBody[name] = value;
+                        }
+
+                        var $taskExecuteTabsHeaderContainer = $('#taskExecuteTabsHeader').empty();
+                        var $taskExecuteTabsContent = $('#taskExecuteTabsContent').empty();
+                        var $modal = $('#assignedExecute');
+                        $modal.find('.loadingContainer').show();
+                        $modal.find('.errorMsgContainer').hide();
+                        $modal.find('.outputArea').hide();
+                        $modal.modal('show');
+                        var timestampToPoll = new Date().getTime();
+
+                        $.post('../tasks/' + taskId + '/run', {
+                            choiceParam: reqBody
+                        }, function(data) {
+                            // alert(reqBody);
+
+                            var date = new Date().setTime(data.timestamp);
+                            var taskTimestamp = new Date(date).toLocaleString(); //converts to human readable strings
+                            $('tr[data-taskId="' + taskId + '"] .taskrunTimestamp').html(taskTimestamp);
+
+                            showTaskLogs(taskId, data.historyId, true);
+
+                        }).fail(function(jxhr) {
+                            $modal.find('.loadingContainer').hide();
+                            $modal.find('.outputArea').hide();
+                            var $errorContainer = $modal.find('.errorMsgContainer').show();
+                            if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                                $errorContainer.html(jxhr.responseJSON.message);
+                            } else {
+                                $errorContainer.html("Server Behaved Unexpectedly");
+                            }
+                        });
+                    } //function ends here..
+                    for (var a = 0; a < data[i].taskConfig.parameterized.length; a++) {
+                        if (data[i].taskConfig.parameterized[a].parameterName === "Choice" || data[i].taskConfig.parameterized[a].parameterName === "String" || data[i].taskConfig.parameterized[a].parameterName === "Boolean") {
+                            // alert(data[i].taskConfig.parameterized.length);
+                            // alert('hisdhidsf');
+                            $modalForSelect.modal('show');
+                            var name = data[i].taskConfig.parameterized[a].name;
+
+                            var $tr = $('<tr/>');
+                            var $tdName = $('<td></td>');
+                            var $tdValue = $('<td id="selectValue"></td>');
+                            var selectForparam = $('<select style="width:60%;" class="form-controlSelect"></select>').attr('key', name);
+                            var nameForParam = data[i].taskConfig.parameterized[a].parameterName;
+                            if (nameForParam === 'Choice') {
+                                var label = $('<label style="font-size:14px;">Are you sure you want to execute? Choose the Parameter for-&nbsp <b>' + name + '<b></label>');
+                            } else {
+                                var label = $('<label style="font-size:14px;">Are you sure you want to execute the Job for Parameter &nbsp;- <b>' + name + '<b></label>');
+                            }
+                            $tdValue.append(selectForparam);
+                            $tdName.append(name);
+                            $tr.append($tdName).append($tdValue);
+                            $tableBody.append($tr);
+                            //$modalForSelect.find('.modal-body').append(label).append('<br/>');
+                            //  $modalForSelect.find('.modal-body').append($tableBody);
+
+
+                            if (data[i].taskConfig.parameterized[a].defaultValue) {
+                                for (var k = 0; k < data[i].taskConfig.parameterized[a].defaultValue.length; k++) {
+
+
+                                    var defaultValueCheck = data[i].taskConfig.parameterized[a].defaultValue;
+                                    var str;
+
+                                    str = '<option>' + defaultValueCheck[k] + '</option>';
+
+                                    selectForparam.append(str);
+
+                                } //for loop for default value ends here..
+
+
+                            } //if ends here for default value..
+
+
+                        } //if loop for choice ends here..
+                    } //for ends here..
+                    //new else starts here..
+                } else {
+                    //condition when build is not parameterized and for chef
+                    bootbox.confirm({
+                        message: "Are you sure you want to execute this Job?",
+                        title: "Confirmation",
+
+                        callback: function(result) {
+                            if (result) {
+                                var $taskExecuteTabsHeaderContainer = $('#taskExecuteTabsHeader').empty();
+                                var $taskExecuteTabsContent = $('#taskExecuteTabsContent').empty();
+                                var $modal = $('#assignedExecute');
+                                $modal.find('.loadingContainer').show();
+                                $modal.find('.errorMsgContainer').hide();
+                                $modal.find('.outputArea').hide();
+                                $modal.modal('show');
+                                var timestampToPoll = new Date().getTime();
+                                $.post('../tasks/' + taskId + '/run', nexusData, function(data) {
+                                    //  alert(JSON.stringify(data));
+                                    var date = new Date().setTime(data.timestamp);
+                                    var taskTimestamp = new Date(date).toLocaleString(); //converts to human readable strings
+                                    $('tr[data-taskId="' + taskId + '"] .taskrunTimestamp').html(taskTimestamp);
+                                    if (data.blueprintMessage) {
+                                        $modal.find('.loadingContainer').hide();
+                                        $modal.find('.outputArea').hide();
+                                        var $errorContainer = $modal.find('.errorMsgContainer').show();
+
+                                        $errorContainer.html($('<span></span>').css({
+                                            'color': '#40baf1'
+                                        }).append(data.blueprintMessage));
+                                        if (data.onCompleteResult) {
+                                            for (var l = 0; l < data.onCompleteResult.length; l++) {
+                                                var result = data.onCompleteResult[l].result;
+                                                if (result.id && result.id.length) {
+                                                    for (var m = 0; m < result.id.length; m++) {
+                                                        $.get('../instances/' + result.id[m], function(data) {
+                                                            addInstanceToDOM(data);
+                                                            // serachBoxInInstance.updateData(data,"add",undefined);
+                                                        });
+
+                                                    }
+
+                                                } else {
+                                                    if (result.stackId) {
+                                                        $.get('/cloudformation/' + result.stackId, function(stack) {
+                                                            addStackToDom(stack);
+                                                        })
+                                                        return;
+                                                    } else if (result.armId) {
+                                                        $.get('/azure-arm/' + result.armId, function(armData) {
+                                                            addARMToDom(armData);
+                                                        })
+
+                                                        return;
+                                                    }
+                                                }
+
+                                            }
+                                        }
+
+                                        return;
+
+                                    }
+
+                                    showTaskLogs(taskId, data.historyId, true);
+
+                                }).fail(function(jxhr) {
+                                    $modal.find('.loadingContainer').hide();
+                                    $modal.find('.outputArea').hide();
+                                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                                        $errorContainer.html(jxhr.responseJSON.message);
+                                    } else {
+                                        $errorContainer.html("Server Behaved Unexpectedly");
+                                    }
+                                });
+                            } //result ends here..
+                        }
+                    });
+                }
+            } //if ends here.
+        });
+        $tr.append($tdExecute);
+
+        //method for history starts here. depending upon the job type whether it is chef or jenkins....
+        if (botData.taskType === 'chef' || botData.taskType === 'puppet' || botData.taskType === 'script') {
+            var $tdHistory = $('<td style="vertical-align:inherit;text-align:center;"></td>').append('<a rel="tooltip" data-placement="top" data-original-title="History" data-toggle="modal" data-target="#chefJobHistory" href="javascript:void(0)" class="btn btn-primary btn-sg tableactionbutton"><i class="ace-icon fa fa-header bigger-120"></i></a>');
+            $tdHistory.find('a').data('taskId', botData._id).attr('data-historyTaskId', botData._id).click(function(e) {
+                var taskId = $(this).data('taskId');
+                var $modal = $('#chefJobHistory');                
+                $modal.find('.loadingContainer').show();
+                $modal.find('.outputArea').hide();
+                $modal.find('.errorMsgContainer').hide();
+                $modal.removeClass('hidden');
+                $('#orchestrationTable').hide();
+                $('.hideChefJob').click(function(e) {
+                    $modal.addClass('hidden');
+                    $('#orchestrationTable').show();
+                });
+                $taskHistoryDatatable.clear().draw();
+                $('.modal-header').find('h5.chefTitle').html('Chef History For -&nbsp;' + botData.name);
+                $.get('../tasks/' + taskId + '/history', function(taskHistories) {
+                    for (var i = 0; i < taskHistories.length; i++) {
+                        var $trHistoryRow = $('<tr/>');
+                        var dateStarted = new Date().setTime(taskHistories[i].timestampStarted);
+                        dateStarted = new Date(dateStarted).toLocaleString(); //converts to human readable strings
+                        var $tdTimeStarted = $('<td></td>').append(dateStarted);
+                        $trHistoryRow.append($tdTimeStarted);
+
+                        var dateEnded = ' - '
+                        if (taskHistories[i].timestampEnded) {
+                            var dateEnded = new Date().setTime(taskHistories[i].timestampEnded);
+                            dateEnded = new Date(dateEnded).toLocaleString(); //converts to human readable strings
+                        }
+                        var $tdTimeEnded = $('<td></td>').append(dateEnded);
+                        $trHistoryRow.append($tdTimeEnded);
+                        if (taskHistories[i].status.toLowerCase() === "success") {
+                            var $tdBuildStatus = $('<td style="background-color:#1c9951;"></td>').append('<span style="color:#fff">SUCCESS</span>');
+                            $trHistoryRow.append($tdBuildStatus);
+                        } else if (taskHistories[i].status.toLowerCase() === "failed") {
+                            var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">FAILURE</span>');
+                            $trHistoryRow.append($tdBuildStatusFailure);
+                        } else if (taskHistories[i].status.toLowerCase() === "failure") {
+                            var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">FAILURE</span>');
+                            $trHistoryRow.append($tdBuildStatusFailure);
+                        } else if (taskHistories[i].status.toLowerCase() === "aborted") {
+                            var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">ABORTED</span>');
+                            $trHistoryRow.append($tdBuildStatusFailure);
+                        } else {
+                            var $tdBuildStatusRunning = $('<td style="background-color:gray;"></td>').append('<span style="color:#fff;">PENDING</span>');
+                            $trHistoryRow.append($tdBuildStatusRunning);
+                        }
+                        var $tdMessage = $('<td style="width:42%"></td>');
+                        $trHistoryRow.append($tdMessage);
+                        if (taskHistories[i].taskType === 'chef') {
+                            (function($td) {
+                                var message = ' - ';
+                                if (taskHistories[i].nodeIds && taskHistories[i].nodeIds.length == 1) {
+                                    if (taskHistories[i].executionResults && taskHistories[i].executionResults.length == 1) {
+                                        $.get('../chefClientExecution/' + taskHistories[i].executionResults[0].executionId, function(execData) {
+                                            if (execData && execData.message) {
+                                                $td.append(execData.message);
+                                            } else {
+                                                $td.append(message);
+                                            }
+
+                                        }).fail(function() {
+                                            $td.append(message);
+                                        });
+                                    } else {
+                                        $td.append(message);
+                                    }
+                                } else {
+                                    $td.append(message);
+                                }
+                            })($tdMessage)
+                        }
+                        var $tdUser = $('<td></td>').append(taskHistories[i].user);
+                        $trHistoryRow.append($tdUser);
+
+                        var $tdLogs = $('<td></td>').append('<a data-original-title="MoreInfo" data-placement="top" rel="tooltip" class="moreinfoBuild margin-left40per" href="javascript:void(0)" data-toggle="modal"></a>');
+                        $tdLogs.find('a').data('history', taskHistories[i]).data('taskId', taskId).click(function() {
+                            var history = $(this).data('history');
+                            showTaskLogs(history.taskId, history._id,true);
+                        });
+                        $trHistoryRow.append($tdLogs);
+                        $taskHistoryDatatable.row.add($trHistoryRow).draw();
+                    }
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').show();
+                }).fail(function(jxhr) {
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').hide();
+                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                        $errorContainer.html(jxhr.responseJSON.message);
+                    } else {
+                        $errorContainer.html("Server Behaved Unexpectedly");
+                    }
+                });
+            });
+        } else if (botData.taskType === 'composite') {
+            var $tdHistory = $('<td style="vertical-align:inherit;text-align:center;"></td>').append('<a rel="tooltip" data-placement="top" data-original-title="History" data-toggle="modal" data-target="#compositeJobHistory" href="javascript:void(0)" class="btn btn-primary btn-sg tableactionbutton"><i class="ace-icon fa fa-header bigger-120"></i></a>');
+            $tdHistory.find('a').data('taskId', botData._id).attr('data-historyTaskId', botData._id).click(function(e) {
+                var taskId = $(this).data('taskId');
+                var $modal = $('#compositeJobHistory');
+                $modal.find('.loadingContainer').show();
+                $modal.find('.outputArea').hide();
+                $modal.find('.errorMsgContainer').hide();
+                $modal.removeClass('hidden');
+                $('#orchestrationTable').hide();
+                $('.hideCompositeJob').click(function(e) {
+                    $modal.addClass('hidden');
+                    $('#orchestrationTable').show();
+                });
+                $compositeTaskHistoryDatatable.clear().draw();
+
+                $('.modal-header').find('h5.compositeTitle').html('Composite History For -&nbsp;' + botData.name);
+
+                $.get('../tasks/' + taskId + '/history', function(taskHistories) {
+                    for (var i = 0; i < taskHistories.length; i++) {
+                        var $trHistoryRow = $('<tr/>');
+
+                        var dateStarted = new Date().setTime(taskHistories[i].timestampStarted);
+                        dateStarted = new Date(dateStarted).toLocaleString(); //converts to human readable strings
+                        var $tdTimeStarted = $('<td></td>').append(dateStarted);
+                        $trHistoryRow.append($tdTimeStarted);
+
+                        var dateEnded = ' - '
+                        if (taskHistories[i].timestampEnded) {
+                            var dateEnded = new Date().setTime(taskHistories[i].timestampEnded);
+                            dateEnded = new Date(dateEnded).toLocaleString(); //converts to human readable strings
+                        }
+                        var $tdTimeEnded = $('<td></td>').append(dateEnded);
+                        $trHistoryRow.append($tdTimeEnded);
+
+
+
+                        if (taskHistories[i].status.toLowerCase() === "success") {
+                            var $tdBuildStatus = $('<td style="background-color:#1c9951;"></td>').append('<span style="color:#fff">SUCCESS</span>');
+                            $trHistoryRow.append($tdBuildStatus);
+                        } else if (taskHistories[i].status.toLowerCase() === "failed") {
+                            var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">FAILURE</span>');
+                            $trHistoryRow.append($tdBuildStatusFailure);
+                        } else if (taskHistories[i].status.toLowerCase() === "failure") {
+                            var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">FAILURE</span>');
+                            $trHistoryRow.append($tdBuildStatusFailure);
+                        } else if (taskHistories[i].status.toLowerCase() === "aborted") {
+                            var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">ABORTED</span>');
+                            $trHistoryRow.append($tdBuildStatusFailure);
+                        } else {
+                            var $tdBuildStatusRunning = $('<td style="background-color:gray;"></td>').append('<span style="color:#fff;">PENDING</span>');
+                            $trHistoryRow.append($tdBuildStatusRunning);
+                        }
+
+                        var $tdUser = $('<td></td>').append(taskHistories[i].user);
+                        $trHistoryRow.append($tdUser);
+
+                        var $tdLogs = $('<td></td>').append('<a data-original-title="MoreInfo" data-placement="top" rel="tooltip" class="moreinfoBuild margin-left40per" href="javascript:void(0)" data-toggle="modal"></a>');
+                        $tdLogs.find('a').data('history', taskHistories[i]).data('taskId', taskId).click(function() {
+                            var history = $(this).data('history');
+                            showTaskLogs(history.taskId, history._id, true);
+                        });
+                        $trHistoryRow.append($tdLogs);
+
+                        $compositeTaskHistoryDatatable.row.add($trHistoryRow).draw();
+                    }
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').show();
+                }).fail(function(jxhr) {
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').hide();
+                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                        $errorContainer.html(jxhr.responseJSON.message);
+                    } else {
+                        $errorContainer.html("Server Behaved Unexpectedly");
+                    }
+                });
+            });
+        } else if (botData.taskType === 'jenkins') {
+            //alert(JSON.stringify(data[i]));
+            //history for jenkins job type...description mentioned above..
+            var $tdHistory = $('<td style="vertical-align:inherit;text-align:center;"></td>').append('<a rel="tooltip" data-placement="top" data-original-title="History" data-toggle="modal" data-target="#jenkinsJobHistory" href="javascript:void(0)" class="btn btn-primary btn-sg tableactionbutton"><i class="ace-icon fa fa-header bigger-120"></i></a>');
+            $tdHistory.find('a').data('taskId', botData._id).data('autosyncFlag', botData.taskConfig.autoSyncFlag).attr('data-historyTaskId', botData._id).click(function(e) {
+                var taskId = $(this).data('taskId');
+                $taskHistoryDatatableJenkins.row().clear().draw(true);
+                var $modal = $('#jenkinsJobHistory');
+                $modal.find('.loadingContainer').show();
+                $modal.find('.outputArea').hide();
+                $modal.find('.errorMsgContainer').hide();
+                $modal.removeClass('hidden');
+                $('#orchestrationTable').hide();
+                $('.hideJenkinsJob').click(function(e) {
+                    $modal.addClass('hidden');
+                    $taskHistoryDatatableJenkins.row().clear().draw(true);
+                    $('#orchestrationTable').show();
+                });
+
+                $('.modal-header').find('h5.jenkinsTitle').html('Jenkins Job History For -&nbsp;' + botData.name);
+
+                var autoSyncFlag = $(this).data('autosyncFlag');
+                var jenk_url = '';
+                $.get('../tasks/' + taskId, function(item) {
+                    jenk_url = 'http://' + item.taskConfig.jobURL;
+                });
+                //for getting the entire history related to a particular job...
+                $.get('../tasks/' + taskId + '/history', function(taskHistories) {
+                    //console.table(taskHistories);
+                    for (var i = 0; i < taskHistories.length; i++) {
+                        (function(i) {
+                            var jenkUrl = "";
+                            var $tdBuildNumber = "";
+                            var $trHistoryRow = "";
+                            var $tdBuildNumber = "";
+                            // Handled history if task has Blueprint
+                            if (taskHistories[i].blueprintExecutionResults && taskHistories[i].blueprintExecutionResults.length) {
+                                if (taskHistories[i].jobName) {
+                                    $trHistoryRow = $('<tr/>');
+                                    jenkUrl = taskHistories[i].jobName;
+                                    $tdBuildNumber = $('<td/>').append('<a style="word-break: break-all;" title="' + taskHistories[i].jobName + '" target="_blank">' + taskHistories[i].jobName + '</a>');
+                                }
+                            } else if (taskHistories[i].buildNumber) {
+                                $trHistoryRow = $('<tr/>');
+                                jenkUrl = jenk_url + taskHistories[i].buildNumber;
+                                $tdBuildNumber = $('<td/>').append('<a style="word-break: break-all;" href="' + jenkUrl + '" title="' + jenkUrl + '" target="_blank">' + taskHistories[i].buildNumber + '</a>');
+                            } else {
+                                // Handled history if task has Blueprint
+                                $trHistoryRow = $('<tr/>');
+                                jenkUrl = taskHistories[i].jobName;
+                                $tdBuildNumber = $('<td/>').append('<a style="word-break: break-all;" title="' + taskHistories[i].jobName + '" target="_blank">' + taskHistories[i].jobName + '</a>');
+
+                            }
+                            //var $trHistoryRow = $('<tr/>');
+                            //var $tdBuildNumber = $('<td/>').append('<a style="word-break: break-all;" href="' + jenkUrl + '" title="' + jenkUrl + '" target="_blank">' + taskHistories[i].buildNumber + '</a>');
+                            //var $tdBuildNumber = $('<td/>').append('<a style="word-break: break-all;" href="#' +  + '" title="' +  + '" target="_blank">' + taskHistories[i].buildNumber + '</a>');
+                            $trHistoryRow.append($tdBuildNumber);
+
+                            $tdJobName = $('<td/>');
+                            if (taskHistories[i].jobResultURL.length) {
+                                for (var p = 0; p < taskHistories[i].jobResultURL.length; p++) {
+                                    $tdJobName.append('<a class="btn btn-primary btn-sg tableactionbutton marginleftright7" style="word-break: break-all;" href="' + taskHistories[i].jobResultURL[p] + '" title="' + taskHistories[i].jobResultURL[p] + '" target="_blank"><i class="ace-icon fa fa-file-text bigger-120"></i></a>');
+                                }
+                            }
+                            $tdJobName.append('<a title="Jenkins Log" data-placement="top" rel="tooltip" class="btn btn-primary btn-sg tableactionbutton moreinfo" href="javascript:void(0)" data-toggle="modal"><i class="ace-icon fa fa-list bigger-120"></i></a>');
+                            $tdJobName.find('a.moreinfo').data('history', taskHistories[i]).data('taskId', taskId).click(function() {
+                                var history = $(this).data('history');
+                                showTaskLogs(history.taskId, history._id, true);
+                            });
+                            $trHistoryRow.append($tdJobName);
+                            if (taskHistories[i].status != null) {
+                                if (taskHistories[i].status.toLowerCase() === "success") {
+                                    var $tdBuildStatus = $('<td style="background-color:#1c9951;"></td>').append('<span style="color:#fff">SUCCESS</span>');
+                                    $trHistoryRow.append($tdBuildStatus);
+                                } else if (taskHistories[i].status.toLowerCase() === "failed") {
+                                    var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">FAILURE</span>');
+                                    $trHistoryRow.append($tdBuildStatusFailure);
+                                } else if (taskHistories[i].status.toLowerCase() === "failure") {
+                                    var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">FAILURE</span>');
+                                    $trHistoryRow.append($tdBuildStatusFailure);
+                                } else if (taskHistories[i].status.toLowerCase() === "aborted") {
+                                    var $tdBuildStatusFailure = $('<td style="background-color:red;"></td>').append('<span style="color:#fff;">ABORTED</span>');
+                                    $trHistoryRow.append($tdBuildStatusFailure);
+                                } else {
+                                    var $tdBuildStatusRunning = $('<td style="background-color:gray;"></td>').append('<span style="color:#fff;">PENDING</span>');
+                                    $trHistoryRow.append($tdBuildStatusRunning);
+                                }
+                            } else {
+                                var $tdBuildStatusRunning = $('<td></td>').append('<span style="color:#000;">No Status</span>');
+                                $trHistoryRow.append($tdBuildStatusRunning);
+                            }
+                            var dateStarted = new Date().setTime(taskHistories[i].timestampStarted);
+                            dateStarted = new Date(dateStarted).toLocaleString(); //converts to human readable strings
+                            var $tdTimeStarted = $('<td></td>').append(dateStarted);
+                            $trHistoryRow.append($tdTimeStarted);
+
+                            var dateEnded = ' - '
+                            if (taskHistories[i].timestampEnded) {
+                                var dateEnded = new Date().setTime(taskHistories[i].timestampEnded);
+                                dateEnded = new Date(dateEnded).toLocaleString(); //converts to human readable strings
+                            }
+                            var $tdTimeEnded = $('<td></td>').append(dateEnded);
+                            $trHistoryRow.append($tdTimeEnded);
+
+                            $taskHistoryDatatableJenkins.row.add($trHistoryRow).draw();
+                        })(i);
+                    }
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').show();
+
+                }).fail(function(jxhr) {
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').hide();
+                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                        $errorContainer.html(jxhr.responseJSON.message);
+                    } else {
+                        $errorContainer.html("Server Behaved Unexpectedly");
+                    }
+                });
+
+            });
+        }
+        $tr.append($tdHistory);
+        var timestamp = "-";
+        if (botData.lastRunTimestamp) {
+            var date = new Date().setTime(botData.lastRunTimestamp);
+            timestamp = new Date(date).toLocaleString(); //converts to human readable strings
+        }
+
+        //method for getting the last run job time.....
+        var $tdTime = $('<td style="vertical-align:inherit;text-align:center;"></td>').append(timestamp).addClass('taskrunTimestamp');
+        $tr.append($tdTime);
+
+        //method for edit and delete of jobs from orchestration table.
+        var $tdOptions = $('<td style="vertical-align:inherit;text-align:center;"></td>').append('<div class="btn-group tableactionWidth"><a style="margin-left:12px;" class="btn btn-info pull-left tableactionbutton btnEditTask btn-sg" data-original-title="Edit" data-placement="top" rel="tooltip"><i class="ace-icon fa fa-pencil bigger-120"></i></a><a style="margin-left:10px;" rel="tooltip" data-placement="top" data-original-title="Delete" class="btn btn-danger pull-left btn-sg tableactionbutton btnDeleteTask"><i class="ace-icon fa fa-trash-o bigger-120"></i></a></div>').attr('data-taskId', botData._id);
+        //permission set for editing and deleting for ChefTask
+            if(botData.taskType == "chef"){
+                var $tdAction = $('<td/>');
+                $tdAction.append('<div class="btn-group"><button class="btn btn-primary pull-left btn-sg tableactionbutton editRowTrackUrl" data-toggle="modal" data-target="#chefInfo" data-placement="top" value="Update" title="Edit"><i class="ace-icon fa fa-info-circle bigger-120"></i></button></div>').append('<div style="margin-left:14px;" class="btn-group"><button class="btn btn-danger pull-left btn-sg tableactionbutton globalTrackUrlRemove" data-placement="top" value="Remove" title="Delete"><i class="ace-icon fa fa-trash-o bigger-120"></i></button></div>');
+                $tdAction.find('.editRowTrackUrl').data('taskId', botData._id).attr('data-historyTaskId', botData._id).click(function(e) {
+                    var taskId = $(this).data('taskId');
+                    var $modal = $('#chefInfo'); 
+                    var $chefTableInfo = $('#chefJobInfo tbody');               
+                    $modal.find('.loadingContainer').show();
+                    $modal.find('.outputArea').hide();
+                    $modal.find('.errorMsgContainer').hide();
+                    $modal.removeClass('hidden');
+                    $chefTableInfo.empty();
+                    $('.modal-header').find('h5.chefTitle').html(botData.name +' Task Info');
+                    $.get('../tasks/' + taskId, function(taskInfo) {
+                        var $trInfoRow = $('<tr/>');
+                        $trInfoRow.append($('<td></td>').append(taskInfo.name));
+                        var nodeArray = [];
+                        for(var jj = 0;jj < taskInfo.taskConfig.nodeIds.length;jj++){
+                            $.get('../instances/' + taskInfo.taskConfig.nodeIds[jj], function(nodeInfo) {
+                                nodeArray.push(nodeInfo.name);
+                                if(taskInfo.taskConfig.nodeIds.length <= jj){
+                                    $trInfoRow.append($('<td></td>').append(nodeArray));
+                                    var runlistArray = [];
+                                    for(var ii = 0;ii < taskInfo.taskConfig.runlist.length;ii++){
+                                        runlistArray.push(taskInfo.taskConfig.runlist[ii]);
+                                    }
+                                    $trInfoRow.append($('<td></td>').append(runlistArray));
+                                }
+                            }).fail(function(jxhr) {
+                                $modal.find('.loadingContainer').hide();
+                                $modal.find('.outputArea').hide();
+                                var $errorContainer = $modal.find('.errorMsgContainer').show();
+                                if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                                    $errorContainer.html(jxhr.responseJSON.message);
+                                } else {
+                                    $errorContainer.html("Server Behaved Unexpectedly");
+                                }
+                            });                            
+                        }                            
+                        $modal.find('.loadingContainer').hide();
+                        $modal.find('.outputArea').show();
+                        $chefTableInfo.append($trInfoRow);
+                    }).fail(function(jxhr) {
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').hide();
+                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                        $errorContainer.html(jxhr.responseJSON.message);
+                    } else {
+                        $errorContainer.html("Server Behaved Unexpectedly");
+                    }
+                        });
+                    })       
+            }else if(botData.taskType == "jenkins"){
+                var $tdAction = $('<td/>');
+                $tdAction.append('<div class="btn-group"><button class="btn btn-primary pull-left btn-sg tableactionbutton editRowTrackUrl" data-toggle="modal" data-target="#JenkinInfo" data-placement="top" value="Update" title="Edit"><i class="ace-icon fa fa-info-circle bigger-120"></i></button></div>').append('<div style="margin-left:14px;" class="btn-group"><button class="btn btn-danger pull-left btn-sg tableactionbutton globalTrackUrlRemove" data-placement="top" value="Remove" title="Delete"><i class="ace-icon fa fa-trash-o bigger-120"></i></button></div>');
+                $tdAction.find('.editRowTrackUrl').data('taskId', botData._id).attr('data-historyTaskId', botData._id).click(function(e) {
+                    var taskId = $(this).data('taskId');
+                    var $modal = $('#jenkinInfo'); 
+                    var $jenkinTableInfo = $('#jenkinJobInfo tbody');               
+                    $modal.find('.loadingContainer').show();
+                    $modal.find('.outputArea').hide();
+                    $modal.find('.errorMsgContainer').hide();
+                    $modal.removeClass('hidden');
+                    $jenkinTableInfo.empty();
+                    $('.modal-header').find('h5.jenkinsTitle').html(botData.name +' Task Info');
+                    $.get('../tasks/' + taskId, function(taskInfo) {
+                        var $trInfoRow = $('<tr/>');
+                        $trInfoRow.append($('<td></td>').append(taskInfo.name));
+                        var $trInfoRow = $('<tr/>');
+                        $trInfoRow.append($('<td></td>').append(taskInfo.name));
+                        $.get('../jenkins/', function(jenkinServerInfo) { 
+                            jenkinServerInfo = JSON.parse(jenkinServerInfo);         
+                            for (var pp = 0;pp < jenkinServerInfo.length;pp++) {
+                                var jenkinKeys = Object.keys(jenkinServerInfo[pp]);
+                                console.log(jenkinKeys);
+                                for (var qq = 0;qq < jenkinKeys.length;qq++) {
+                                    if (jenkinServerInfo[pp][jenkinKeys[qq]] == taskInfo.taskConfig.jenkinsServerId) {
+                                        $trInfoRow.append($('<td></td>').append(jenkinKeys[qq]));
+                                    };
+                                }
+                            };                            
+                            $trInfoRow.append($('<td></td>').append(taskInfo.taskConfig.jobName));     
+                        }).fail(function(jxhr) {
+                            $modal.find('.loadingContainer').hide();
+                            $modal.find('.outputArea').hide();
+                            var $errorContainer = $modal.find('.errorMsgContainer').show();
+                            if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                                $errorContainer.html(jxhr.responseJSON.message);
+                            } else {
+                                $errorContainer.html("Server Behaved Unexpectedly");
+                            }
+                        });                                                
+                        $('#infoJenkinLoad').hide();
+                        $modal.find('.outputArea').show();
+                        $jenkinTableInfo.append($trInfoRow);
+                    }).fail(function(jxhr) {
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').hide();
+                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                        $errorContainer.html(jxhr.responseJSON.message);
+                    } else {
+                        $errorContainer.html("Server Behaved Unexpectedly");
+                    }
+                        });
+                });               
+            }else if(botData.taskType == "script"){
+                var $tdAction = $('<td/>');
+                $tdAction.append('<div class="btn-group"><button class="btn btn-primary pull-left btn-sg tableactionbutton editRowTrackUrl" data-toggle="modal" data-target="#scriptInfo" data-placement="top" value="Update" title="Edit"><i class="ace-icon fa fa-info-circle bigger-120"></i></button></div>').append('<div style="margin-left:14px;" class="btn-group"><button class="btn btn-danger pull-left btn-sg tableactionbutton globalTrackUrlRemove" data-placement="top" value="Remove" title="Delete"><i class="ace-icon fa fa-trash-o bigger-120"></i></button></div>');
+                $tdAction.find('.editRowTrackUrl').data('taskId', botData._id).attr('data-historyTaskId', botData._id).click(function(e) {
+                    var taskId = $(this).data('taskId');
+                    var $modal = $('#scriptInfo'); 
+                    var $scriptTableInfo = $('#scriptJobInfo tbody');               
+                    $modal.find('.loadingContainer').show();
+                    $modal.find('.outputArea').hide();
+                    $modal.find('.errorMsgContainer').hide();
+                    $modal.removeClass('hidden');
+                    $scriptTableInfo.empty();
+                    $('.modal-header').find('h5.chefTitle').html(botData.name +' Task Info');
+                    $.get('../tasks/' + taskId, function(taskInfo) {
+                        var $trInfoRow = $('<tr/>');
+                        $trInfoRow.append($('<td></td>').append(taskInfo.name));
+                        $trInfoRow.append($('<td></td>').append(taskInfo.taskConfig.scriptTypeName));
+                        for(var tt = 0;tt < taskInfo.taskConfig.scriptDetails.length;tt++){
+                            (function(tt) {
+                            $.get('../scripts/', function(scriptServerInfo) { 
+                            for(var rr=0;rr<scriptServerInfo.data.length;rr++){
+                                if(scriptServerInfo.data[rr].scriptId == taskInfo.taskConfig.scriptDetails[tt].scriptId){
+                                    $trInfoRow.append($('<td></td>').append(scriptServerInfo.data[rr].name)); 
+                                }
+                            }    
+                        }).fail(function(jxhr) {
+                            $modal.find('.loadingContainer').hide();
+                            $modal.find('.outputArea').hide();
+                            var $errorContainer = $modal.find('.errorMsgContainer').show();
+                            if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                                $errorContainer.html(jxhr.responseJSON.message);
+                            } else {
+                                $errorContainer.html("Server Behaved Unexpectedly");
+                            }
+                        });
+                        })(tt);  
+                        }
+                        $modal.find('.loadingContainer').hide();
+                        $modal.find('.outputArea').show();
+                        $scriptTableInfo.append($trInfoRow);
+                    }).fail(function(jxhr) {
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').hide();
+                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                        $errorContainer.html(jxhr.responseJSON.message);
+                    } else {
+                        $errorContainer.html("Server Behaved Unexpectedly");
+                    }
+                        });
+                    })
+            }else if(botData.taskType == "composite"){
+                var $tdAction = $('<td/>');
+                $tdAction.append('<div class="btn-group"><button class="btn btn-primary pull-left btn-sg tableactionbutton editRowTrackUrl" data-toggle="modal" data-target="#compositeInfo" data-placement="top" value="Update" title="Edit"><i class="ace-icon fa fa-info-circle bigger-120"></i></button></div>').append('<div style="margin-left:14px;" class="btn-group"><button class="btn btn-danger pull-left btn-sg tableactionbutton globalTrackUrlRemove" data-placement="top" value="Remove" title="Delete"><i class="ace-icon fa fa-trash-o bigger-120"></i></button></div>');
+                $tdAction.find('.editRowTrackUrl').data('taskId', botData._id).attr('data-historyTaskId', botData._id).click(function(e) {
+                    var taskId = $(this).data('taskId');
+                    var $modal = $('#compositeInfo'); 
+                    var $compositeTableInfo = $('#compositeJobInfo tbody');               
+                    $modal.find('.loadingContainer').show();
+                    $modal.find('.outputArea').hide();
+                    $modal.find('.errorMsgContainer').hide();
+                    $modal.removeClass('hidden');
+                    $compositeTableInfo.empty();
+                    $('.modal-header').find('h5.compositeTitle').html(botData.name +' Task Info');
+                    $.get('../tasks/' + taskId, function(taskInfo) {
+                        var $trInfoRow = $('<tr/>');
+                        $trInfoRow.append($('<td></td>').append(taskInfo.name));
+                        var compositeTaskName = [];
+                        for(var kk = 0;kk < taskInfo.taskConfig.assignTasks.length;kk++){
+                                $.get('../tasks/'+taskInfo.taskConfig.assignTasks[kk], function(compositeTaskInfo) { 
+                                    compositeTaskName.push(compositeTaskInfo.name);
+                                    if(compositeTaskName.length  == taskInfo.taskConfig.assignTasks.length){
+                                        $trInfoRow.append($('<td></td>').append(JSON.stringify(compositeTaskName)));
+                                    }
+                                }).fail(function(jxhr) {
+                                    $modal.find('.loadingContainer').hide();
+                                    $modal.find('.outputArea').hide();
+                                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                                        $errorContainer.html(jxhr.responseJSON.message);
+                                    } else {
+                                        $errorContainer.html("Server Behaved Unexpectedly");
+                                    }
+                                });
+                        }
+                        //$trInfoRow.append($('<td></td>').append(JSON.stringify(taskListDetail)));
+                        $modal.find('.loadingContainer').hide();
+                        $modal.find('.outputArea').show();
+                        $compositeTableInfo.append($trInfoRow);
+                    }).fail(function(jxhr) {
+                    $modal.find('.loadingContainer').hide();
+                    $modal.find('.outputArea').hide();
+                    var $errorContainer = $modal.find('.errorMsgContainer').show();
+                    if (jxhr.responseJSON && jxhr.responseJSON.message) {
+                        $errorContainer.html(jxhr.responseJSON.message);
+                    } else {
+                        $errorContainer.html("Server Behaved Unexpectedly");
+                    }
+                        });
+                    })
+            }
+        $tr.append($tdAction);
+        $botNameList.append($tr);
+        $botDatatable.row.add($tr).draw();
+    }
+}
+
+function showTaskLogs(taskId, historyId, isExecuted) {
+    var $modal = $('#assignedExecute');
+    $modal.find('.loadingContainer').show();
+    $modal.find('.errorMsgContainer').hide();
+    var $outputArea = $modal.find('.outputArea').hide().empty();
+    $modal.modal('show');
+    $.get('/tasks/' + taskId + '/history/' + historyId, function(historyData) {
+        $modal.find('.loadingContainer').hide();
+        $modal.find('.errorMsgContainer').hide();
+        $outputArea.show();
+
+        switch (historyData.taskType) {
+            case 'puppet':
+                $outputArea.append(showTaskLogsPC(historyData));
+                break;
+            case 'chef':
+                $outputArea.append(showTaskLogsPC(historyData));
+                break;
+            case 'jenkins':
+                $outputArea.append(showTaskJenkinsLogs(historyData, isExecuted));
+                break;
+            case 'composite':
+                $outputArea.append(showTaskCompositeLogs(historyData, isExecuted));
+                break;
+
+        }
+    });
+}
+
+function showTaskLogsPC(history) {
+    var $ulHeaderArea = $('<ul class="nav nav-tabs bordered taskExecuteTabsHeader"></ul>');
+    var $contentArea = $('<div class="tab-content padding-10 taskExecuteTabsContent"></div>');
+    if (history.nodeIdsWithActionLog && history.nodeIdsWithActionLog.length) {
+        var ids = [];
+        for (var kk = 0; kk < history.nodeIdsWithActionLog.length; kk++) {
+            ids.push(history.nodeIdsWithActionLog[kk].nodeId)
+        }
+        $.post('../instances', {
+            instanceIds: ids
+        }, function(instances) {
+            for (var kk = 0; kk < instances.length; kk++) {
+                for (var jj = 0; jj < history.nodeIdsWithActionLog.length; jj++) {
+                    if (instances[kk]._id === history.nodeIdsWithActionLog[jj].nodeId) {
+                        instances[kk].tempActionLogId = history.nodeIdsWithActionLog[jj].actionLogId;
+                    }
+                }
+            }
+            for (var i = 0; i < instances.length; i++) {
+                var nodeName;
+                if (instances[i].chef) {
+                    nodeName = instances[i].chef.chefNodeName;
+                } else {
+                    nodeName = instances[i].puppet.puppetNodeName;
+                }
+                if (instances[i].instanceIP) {
+                    var nodeName = instances[i].instanceIP;
+                }
+                if (instances[i].name) {
+                    nodeName = instances[i].name;
+                }
+                var tabId = 'tab_' + instances[i]._id + parseInt(Math.random() * (100000 - 10000) + 10000);
+                var $liHeader = $('<li><a href="#' + tabId + '" data-toggle="tab" data-taskInstanceId="' + instances[i]._id + '" data-taskActionLogId="' + instances[i].tempActionLogId + '">' + nodeName + '</a></li>');
+                if (i === 4) {
+                    var $liMoreHeader = $('<li class="dropdown dropdownlog"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">More... <b class="caret"></b></a><ul class="dropdown-menu"></ul></li>');
+
+                    $ulHeaderArea.append($liMoreHeader);
+
+                    $ulHeaderArea = $liMoreHeader.find('ul');
+
+                }
+                $ulHeaderArea.append($liHeader);
+                var $tabContent = $('<div class="tab-pane fade" id="' + tabId + '"><div class="taskLogArea chefLOGS"></div></div>');
+                $contentArea.append($tabContent);
+            }
+            $ulHeaderArea.find('a[data-toggle="tab"]').each(function(e) {
+                $(this).attr('data-taskPolling', 'true');
+                var timestamp = history.timestampStarted;
+                if (!timestamp) {
+                    timestamp = new Date().getTime();
+                }
+                $(this).attr('data-taskPollLastTimestamp', timestamp);
+                var timestampEnded = history.timestampEnded;
+                if (timestampEnded) {
+                    $(this).attr('data-taskPollTimestampEnded', timestampEnded);
+                }
+                var tabId = $(this).attr('href');
+                pollTaskLogs($(this), $(tabId), null, 0, false);
+                //e.relatedTarget // previous active tab
+            });
+
+            $ulHeaderArea.find('a[data-toggle="tab"]').on('hidden.bs.tab', function(e) {
+                $(e.target).attr('data-taskPolling', 'true');
+                //e.relatedTarget // previous active tab
+            }).first().click();
+        });
+    }
+
+    var $template = $('<div role="content"><div class="widget-body"></div></div>');
+    $template.find('.widget-body').append($ulHeaderArea).append($contentArea);
+    return $template;
+
+}
+
+function showTaskJenkinsLogs(history, isExecuted) {
+    var $ulHeaderArea = $('<ul class="nav nav-tabs bordered taskExecuteTabsHeader"></ul>');
+    var $contentArea = $('<div class="tab-content padding-10 taskExecuteTabsContent"></div>');
+    var tabId = 'tab_jenkinsTask' + history._id;
+    var $liHeader = $('<li><a href="#' + tabId + '" data-toggle="tab">Jenkins Job</a></li>');
+    $ulHeaderArea.append($liHeader);
+    var $tabContent = $('<div class="tab-pane fade" id="' + tabId + '"><div class="taskLogArea taskLOGS"></div></div>');
+    $contentArea.append($tabContent);
+    setTimeout(function() {
+        $liHeader.find('a').click();
+    }, 3000)
+
+
+
+    var jenkinsServerId = history.jenkinsServerId;
+    var jobName = history.jobName;
+    var lastBuildNumber = history.previousBuildNumber;
+    if (!isExecuted) {
+        var buildNumber = history.buildNumber;
+    }
+
+    function pollJobOutput() {
+        $.get('../jenkins/' + jenkinsServerId + '/jobs/' + jobName + '/builds/' + buildNumber + '/output', function(jobOutput) {
+            var output = jobOutput.output.replace(/\r?\n/g, "<br />");
+
+            $tabContent.find('.taskLogArea').html(output);
+            console.log(jobOutput);
+            setTimeout(function() {
+                if ($('#assignedExecute').data()['bs.modal'].isShown) {
+                    pollJobOutput();
+                }
+            }, 3000);
+        });
+    }
+
+    function pollJob() {
+
+        $.get('../jenkins/' + jenkinsServerId + '/jobs/' + jobName, function(job) {
+
+            if (job.lastBuild.number > lastBuildNumber) {
+                buildNumber = job.lastBuild.number;
+
+                pollJobOutput();
+            } else {
+                pollJob();
+            }
+            console.log(job);
+        });
+    }
+
+
+    if (buildNumber) {
+        pollJobOutput();
+    } else {
+        pollJob();
+    }
+
+    var $template = $('<div role="content"><div class="widget-body"></div></div>');
+    $template.find('.widget-body').append($ulHeaderArea).append($contentArea);
+    return $template;
+}
+
+function showTaskCompositeLogs(history, isExecuted) {
+    var $ulHeaderArea = $('<ul class="nav nav-tabs bordered taskExecuteTabsHeader"></ul>');
+    var $contentArea = $('<div class="tab-content padding-10 taskExecuteTabsContent"></div>');
+    var headerCount = 0;
+
+    function createTabs(taskId, historyId) {
+
+        if ($('#tab_' + historyId).length) {
+            return;
+        }
+        $.get('/tasks/' + taskId, function(task) {
+            if ($('#tab_' + historyId).length) {
+                return;
+            }
+
+            var $liHeader = $('<li><a href="#tab_' + historyId + '" data-toggle="tab">' + task.name + '</a></li>');
+            if (headerCount === 4) {
+                var $liMoreHeader = $('<li class="dropdown dropdownlog"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">More... <b class="caret"></b></a><ul class="dropdown-menu"></ul></li>');
+
+                $ulHeaderArea.append($liMoreHeader);
+
+                $ulHeaderArea = $liMoreHeader.find('ul');
+
+            }
+            $ulHeaderArea.append($liHeader);
+            var $tabContent = $('<div class="tab-pane fade" id="tab_' + historyId + '"><div class="taskLogArea chefLOGS"></div></div>');
+            $contentArea.append($tabContent);
+            var $logArea = $tabContent.find('.taskLogArea');
+            console.log('innet fetch task ==>' + historyId);
+            $.get('/tasks/' + taskId + '/history/' + historyId, function(historyData) {
+                if (historyData.blueprintExecutionResults) {
+                    var success = false;
+                    for (var i = 0; i < historyData.blueprintExecutionResults.length; i++) {
+                        if (historyData.blueprintExecutionResults[i].status === 'success') {
+                            success = true;
+                        }
+                    }
+                    if (success) {
+                        $logArea.append('Blueprints Launched Successfully');
+                    } else {
+                        $logArea.append('Unable to Launch Blueprints');
+
+                    }
+                    return;
+                }
+
+                switch (historyData.taskType) {
+                    case 'puppet':
+                        $logArea.append(showTaskLogsPC(historyData));
+                        break;
+                    case 'chef':
+                        $logArea.append(showTaskLogsPC(historyData));
+                        break;
+                    case 'jenkins':
+                        $logArea.append(showTaskJenkinsLogs(historyData, isExecuted));
+                        break;
+                }
+            });
+            headerCount++;
+            //if(headerCount === 1) {
+
+            setTimeout(function() {
+                    $liHeader.find('a').click();
+                }, 2000)
+                //}
+        });
+
+    }
+
+    function pollHistory() {
+        console.log('composite task ==>' + history._id);
+        $.get('/tasks/' + history.taskId + '/history/' + history._id, function(historyData) {
+            var taskHistoryIds = historyData.taskHistoryIds;
+            for (var i = 0; i < taskHistoryIds.length; i++) {
+                createTabs(taskHistoryIds[i].taskId, taskHistoryIds[i].historyId);
+            }
+            setTimeout(function() {
+                if ($('#assignedExecute').data()['bs.modal'].isShown) {
+                    pollHistory();
+                }
+
+            }, 5000);
+        });
+    }
+
+    var $template = $('<div role="content"><div class="widget-body"></div></div>');
+    $template.find('.widget-body').append($ulHeaderArea).append($contentArea);
+    pollHistory();
+    return $template;
+
+}
+
+function pollTaskLogs($tabLink, $tab, timestamp, delay, clearData) {
+    var instanceId = $tabLink.attr('data-taskInstanceId');
+    var actionLogId = $tabLink.attr('data-taskActionLogId');
+    var timestamp = $tabLink.attr('data-taskPollLastTimestamp');
+    var timestampEnded = $tabLink.attr('data-taskPollTimestampEnded');
+    var poll = $tabLink.attr('data-taskPolling');
+
+    if (poll !== 'true') {
+        console.log('not polling');
+        return;
+    }
+    if (actionLogId) {
+        var url = '../instances/' + instanceId + '/actionLogs/' + actionLogId + '/logs';
+    } else {
+        var url = '../instances/' + instanceId + '/logs';
+    }
+
+
+    if (timestamp) {
+        url = url + '?timestamp=' + timestamp;
+        if (timestampEnded) {
+            url = url + '&timestampEnded=' + timestampEnded;
+        }
+    }
+
+    timeout = setTimeout(function() {
+        $.get(url, function(data) {
+            var $modalBody = $tab.find('.taskLogArea')
+            if (clearData) {
+                $modalBody.empty();
+            }
+            var $table = $('<table></table>');
+
+            for (var i = 0; i < data.length; i++) {
+                var $rowDiv = $('<tr class="row rowSpacing"></tr>');
+                var timeString = new Date().setTime(data[i].timestamp);
+                var date = new Date(timeString).toLocaleString(); //converts to human readable strings
+
+                /*$rowDiv.append($('<div class="col-lg-4 col-sm-4"></div>').append('<div>' + date + '</div>'));*/
+
+                if (data[i].err) {
+                    $rowDiv.append($('<td class="col-lg-12 col-sm-12" style="color:red;"></td>').append('<span class="textLogs">' + date + '</span>' + '&nbsp;&nbsp;&nbsp;' + '<span>' + data[i].log + '</span>'));
+                } else {
+                    $rowDiv.append($('<td class="col-lg-12 col-sm-12" style="color:DarkBlue;"></td>').append('<span class="textLogs">' + date + '</span>' + '&nbsp;&nbsp;&nbsp;' + '<span>' + data[i].log + '</span>'));
+                }
+
+                $table.append($rowDiv);
+                // $table.append('<hr/>');
+            }
+            if (data.length) {
+                lastTimestamp = data[data.length - 1].timestamp;
+                console.log(lastTimestamp);
+                $modalBody.append($table);
+                $modalBody.scrollTop($modalBody.scrollHeight + 100);
+                $tabLink.attr('data-taskPollLastTimestamp', data[data.length - 1].timestamp);
+            }
+            console.log('polling again');
+            if ($tabLink.attr('data-taskPolling') === 'true' && $('#assignedExecute').data()['bs.modal'].isShown && !timestampEnded) {
+
+                pollTaskLogs($tabLink, $tab, $tabLink.attr('data-taskPollLastTimestamp'), 1000, false);
+            } else {
+                console.log('not polling again');
+            }
+        });
+    }, delay);
+}
+</script>

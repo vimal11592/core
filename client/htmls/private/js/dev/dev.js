@@ -4415,7 +4415,6 @@ function devCall() {
                 var timestamp = $tabLink.attr('data-taskPollLastTimestamp');
                 var timestampEnded = $tabLink.attr('data-taskPollTimestampEnded');
                 var poll = $tabLink.attr('data-taskPolling');
-
                 if (poll !== 'true') {
                     console.log('not polling');
                     return;
@@ -4425,15 +4424,12 @@ function devCall() {
                 } else {
                     var url = '../instances/' + instanceId + '/logs';
                 }
-
-
                 if (timestamp) {
                     url = url + '?timestamp=' + timestamp;
                     if (timestampEnded) {
                         url = url + '&timestampEnded=' + timestampEnded;
                     }
                 }
-
                 timeout = setTimeout(function() {
                     $.get(url, function(data) {
                         var $modalBody = $tab.find('.taskLogArea')
@@ -4980,9 +4976,6 @@ function devCall() {
 
 
                                     } //if loop for choice ends here..
-
-
-
                                 } //for ends here..
                                 //new else starts here..
                             } else {
@@ -5060,7 +5053,6 @@ function devCall() {
                                                     $errorContainer.html("Server Behaved Unexpectedly");
                                                 }
                                             });
-
                                         } //result ends here..
                                     }
                                 });
@@ -5089,7 +5081,6 @@ function devCall() {
                             $.get('../tasks/' + taskId + '/history', function(taskHistories) {
                                 for (var i = 0; i < taskHistories.length; i++) {
                                     var $trHistoryRow = $('<tr/>');
-
                                     var dateStarted = new Date().setTime(taskHistories[i].timestampStarted);
                                     dateStarted = new Date(dateStarted).toLocaleString(); //converts to human readable strings
                                     var $tdTimeStarted = $('<td></td>').append(dateStarted);
@@ -5167,7 +5158,6 @@ function devCall() {
                                 }
                             });
                         });
-
                     } else if (data[i].taskType === 'composite') {
                         var $tdHistory = $('<td style="vertical-align:inherit;text-align:center;"></td>').append('<a rel="tooltip" data-placement="top" data-original-title="History" data-toggle="modal" href="javascript:void(0)" class="btn btn-primary btn-sg tableactionbutton"><i class="ace-icon fa fa-header bigger-120"></i></a>');
                         $tdHistory.find('a').data('taskId', data[i]._id).attr('data-historyTaskId', data[i]._id).click(function(e) {

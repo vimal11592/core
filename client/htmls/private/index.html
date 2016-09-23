@@ -48,6 +48,9 @@
               <a class="dropdown-toggle navigationTab" href="#ajax/trackSettings.html" id="trackNew"  onclick="setleftnavigation(this,'Track');"><i class="fa fa-anchor"></i>&nbsp;TRACK</a>
             </li>
             <!--track ends here-->
+            <li class="left-projects-links" id="serviceStyle" data-target="#Service" navigation="Service">
+              <a class="dropdown-toggle navigationTab" href="#ajax/botLibrary.html" id="serviceNew"  onclick="setleftnavigation(this,'Service');"><i class="fa fa-shield"></i>&nbsp;Service Delivery</a>
+            </li>
             <!--right side navbar-->
             <span class="navRight">
               <li class="left-projects-links active" id="liuserinfo"></li>
@@ -87,7 +90,7 @@
         </div>
         <div id="trackTree" class="font-size-12"></div>
       </div>
-      <!--track ends here-->
+      <!--track ends here-->       
       <div id="Settings_nav" style="display:none;">
         <div class="leftSpaceStyle">
           <div class="hiddencollapse treeStyle">SETTINGS</div>
@@ -99,6 +102,24 @@
         <ul class="menu-item-parentdemo" id="Workspace">
         </ul>
         <ul class="menu-item-parentdemo hidden" id="Track">
+        </ul>
+        <ul class="menu-item-parentdemo hidden" id="Service" providerselected="botlibrary">
+          <li class="active open">
+            <a href="#" class="activeProviderOpen"><i class="fa fa-lg fa-fw fa-shield"></i><span class="menu-item-parent trackAlign"><strong>Services</strong></span>
+            </a>
+            <ul class="visibleClass">
+            <li>
+              <a href="ajax/botLibrary.html" onclick="$('#Service').attr('providerselected','botlibrary');">
+                  <div><span class="menu-item-parent trackAlign">&nbsp;&nbsp;Bot Library</span></div>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                  <div><span class="menu-item-parent trackAlign">&nbsp;&nbsp;Audit Trail</span></div>
+              </a>
+            </li>
+          </ul>
+          </li>
         </ul>
         <ul class="menu-item-parentdemo hidden" id="blueprints" providerselected="aws">
           <li class="active open">
@@ -769,39 +790,57 @@ function setleftnavigation(toplink, breadcrumbHeader) {
         $('#Settings_nav').hide();
         $('#Workspace1').show();
         $('#trackShow').hide();
+        $('#serviceShow').hide();
 
     } else if (TabID === "designNew") {
         $('#selectOrgName').trigger('click');
         $('#Workspace1').hide();
         $('#Settings_nav').hide();
         $('#trackShow').hide();
+        $('#serviceShow').hide();
 
     } else if (TabID === "settingsNew") {
-        $('#tree').empty()
+        $('#tree').empty() 
         $('#trackTree').empty();
+        $('#serviceTree').empty();
         loadSettingsTree();
         foldTreeForSetting();
         $('#Workspace1').hide();
         $('#trackShow').hide();
         $('#Settings_nav').show();
+        $('#serviceShow').hide();
 
     } else if (TabID === "settingsNewClick") {
         $('#tree').empty();
         $('#trackTree').empty();
+        $('#serviceTree').empty();
         loadSettingsTree();
         foldTreeForSetting();
         $('#Workspace1').hide();
         $('#trackShow').hide();
         $('#Settings_nav').show();
+        $('#serviceShow').hide();
 
     } else if (TabID === "trackNew") {
         $('#tree').empty();
         $('#trackTree').empty();
+        $('#serviceTree').empty();
         getTrackTreeDetails();
         loadTrackTree();
         $('#Workspace1').hide();
         $('#Settings_nav').hide();
         $('#trackShow').show();
+        $('#serviceShow').hide();
+    }else if(TabID === "serviceNew"){
+      $('#tree').empty();
+      $('#trackTree').empty();
+      $('#serviceTree').empty();
+      //loadserviceTree();
+      $('#Workspace1').hide();
+      $('#Settings_nav').hide();
+      $('#trackShow').hide();
+      $('#serviceShow').show();
+
     }
 
     if ($(toplink).hasClass('active')) {
@@ -1113,7 +1152,6 @@ function getTrackTreeDetails() {
         url: '../track',
         success: function(data) {
             trackTree = [];
-
             for (var i = 0; i < data.length; i++) {
                 trackTree.push({
                     "name": "data",
