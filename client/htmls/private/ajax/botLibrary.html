@@ -4,11 +4,11 @@
             <table id="trackTable" class="tableData table table-striped table-bordered table-hover dataTable no-footer textCenter" cellpadding="5px">
                 <thead>
                     <tr class="rowCustomStyle">
-                        <td>Bot Type</td>
+                        <td style="width:10%">Bot Type</td>
                         <td>Name</td>
                         <td>Bot Description</td>
-                        <td>Run Bot</td>
-                        <td>History</td>
+                        <td style="width:10%">Run Bot</td>
+                        <td style="width:10%">History</td>
                         <td>Last Run</td>
                         <td>Bot Action</td>
                     </tr>
@@ -565,6 +565,7 @@ if (!$.fn.dataTable.isDataTable('#trackTable')) {
 }
 $('#trackTable_length').hide();
 $('#trackTable_filter').hide();
+
 if (!$.fn.dataTable.isDataTable('#tablehistoryTask')) {
     //var $taskListArea = $('.taskListArea').empty();
     var $taskHistoryDatatable = $('#tablehistoryTask').DataTable({
@@ -658,8 +659,6 @@ function getGlobalBot() {
     //for getting the list of tracks
     var botUrlDetails = '/tasks/list/all';
     $.get(botUrlDetails, function(data) {
-
-        console.log(data);
         if (data && data.length) {
             for (var kk = 0; kk < data.length; kk++) {
                 createTableForBot(data[kk]);
@@ -677,7 +676,7 @@ function getGlobalBot() {
 };
 
 function createTableForBot(botData) {
-    if (botData) {
+    if (botData && botData.taskType) {
         var $botNameList = $('#botTableInput tbody');
         var $tr = $('<tr class="botItemRow"></tr>').attr('data-botId', botData._id);
         $tr.data('botData', botData);
@@ -699,28 +698,23 @@ function createTableForBot(botData) {
         var $tdName = $('<td class="botName">' + botData.name + '</td>');
         $tr.append($tdType).append($tdName).append($tdDescription);
         var $tdExecute = $('<td style="vertical-align:inherit;text-align:center;"></td>').append('<a rel="tooltip" data-placement="top" data-original-title="Execute" data-toggle="modal" href="javascript:void(0)" class="btn btn-primary btn-sg tableactionbutton"><i class="ace-icon fa fa-play bigger-120"></i></a>');
-        $tdExecute.find('a').data('taskId', botData._id).attr('data-executeTaskId', botData._id).click(function(e, nexusData) {
+        $tdExecute.find('a').data('taskId', botData._id).attr('data-executeTaskId', botData._id).click(function(e) {
             var taskId = $(this).data('taskId');
-
             if (botData.taskType === 'jenkins' || botData.taskType === 'chef' || botData.taskType === 'puppet' || botData.taskType === 'composite' || botData.taskType === 'script') {
                 //checking for parameterized condition..
-                if (botData.taskConfig.parameterized) {
-
+                if (botData.taskConfig.parameterized && botData.taskConfig.parameterized.length) {
                     var $modalForSelect = $('#modalForSelect');
                     var $tableBody = $('#paramTableList').empty();
                     $('#executeJob').unbind('submit').bind('submit', function(e) {
-
                         $modalForSelect.modal('hide');
                         console.log('firing');
                         executeJob();
                         return false;
                     });
-
                     function executeJob() {
                         var $selects = $modalForSelect.find('.modal-body select');
                         //alert($select);
                         var reqBody = {};
-
                         for (var q = 0; q < $selects.length; q++) {
                             var select = $selects[q];
                             var $select = $(select);
@@ -728,7 +722,7 @@ function createTableForBot(botData) {
                             var value = $select.val();
                             reqBody[name] = value;
                         }
-
+                        console.log("reqBody::"+JSON.stringify(reqBody));
                         var $taskExecuteTabsHeaderContainer = $('#taskExecuteTabsHeader').empty();
                         var $taskExecuteTabsContent = $('#taskExecuteTabsContent').empty();
                         var $modal = $('#assignedExecute');
@@ -737,18 +731,16 @@ function createTableForBot(botData) {
                         $modal.find('.outputArea').hide();
                         $modal.modal('show');
                         var timestampToPoll = new Date().getTime();
-
                         $.post('../tasks/' + taskId + '/run', {
                             choiceParam: reqBody
                         }, function(data) {
-                            // alert(reqBody);
-
+                            console.log("Data::"+JSON.stringify(data));
                             var date = new Date().setTime(data.timestamp);
                             var taskTimestamp = new Date(date).toLocaleString(); //converts to human readable strings
                             $('tr[data-taskId="' + taskId + '"] .taskrunTimestamp').html(taskTimestamp);
-
+                            console.log("Histor Id::"+data.historyId);
+                            console.log("Task Id::"+data.historyId);
                             showTaskLogs(taskId, data.historyId, true);
-
                         }).fail(function(jxhr) {
                             $modal.find('.loadingContainer').hide();
                             $modal.find('.outputArea').hide();
@@ -760,18 +752,15 @@ function createTableForBot(botData) {
                             }
                         });
                     } //function ends here..
-                    for (var a = 0; a < data[i].taskConfig.parameterized.length; a++) {
-                        if (data[i].taskConfig.parameterized[a].parameterName === "Choice" || data[i].taskConfig.parameterized[a].parameterName === "String" || data[i].taskConfig.parameterized[a].parameterName === "Boolean") {
-                            // alert(data[i].taskConfig.parameterized.length);
-                            // alert('hisdhidsf');
+                    for (var a = 0; a < botData.taskConfig.parameterized.length; a++) {
+                        if (botData.taskConfig.parameterized[a].parameterName === "Choice" || botData.taskConfig.parameterized[a].parameterName === "String" || botData.taskConfig.parameterized[a].parameterName === "Boolean") {
                             $modalForSelect.modal('show');
-                            var name = data[i].taskConfig.parameterized[a].name;
-
+                            var name = botData.taskConfig.parameterized[a].name;
                             var $tr = $('<tr/>');
                             var $tdName = $('<td></td>');
                             var $tdValue = $('<td id="selectValue"></td>');
                             var selectForparam = $('<select style="width:60%;" class="form-controlSelect"></select>').attr('key', name);
-                            var nameForParam = data[i].taskConfig.parameterized[a].parameterName;
+                            var nameForParam = botData.taskConfig.parameterized[a].parameterName;
                             if (nameForParam === 'Choice') {
                                 var label = $('<label style="font-size:14px;">Are you sure you want to execute? Choose the Parameter for-&nbsp <b>' + name + '<b></label>');
                             } else {
@@ -780,28 +769,19 @@ function createTableForBot(botData) {
                             $tdValue.append(selectForparam);
                             $tdName.append(name);
                             $tr.append($tdName).append($tdValue);
+                            console.log("Print Html::"+$tr.html());
                             $tableBody.append($tr);
-                            //$modalForSelect.find('.modal-body').append(label).append('<br/>');
-                            //  $modalForSelect.find('.modal-body').append($tableBody);
-
-
-                            if (data[i].taskConfig.parameterized[a].defaultValue) {
-                                for (var k = 0; k < data[i].taskConfig.parameterized[a].defaultValue.length; k++) {
-
-
-                                    var defaultValueCheck = data[i].taskConfig.parameterized[a].defaultValue;
+                            if (botData.taskConfig.parameterized[a].defaultValue) {
+                                for (var k = 0; k < botData.taskConfig.parameterized[a].defaultValue.length; k++) {
+                                    var defaultValueCheck = botData.taskConfig.parameterized[a].defaultValue;
                                     var str;
-
                                     str = '<option>' + defaultValueCheck[k] + '</option>';
-
+                                    console.log("Print value of str here::"+str);
                                     selectForparam.append(str);
-
                                 } //for loop for default value ends here..
 
 
                             } //if ends here for default value..
-
-
                         } //if loop for choice ends here..
                     } //for ends here..
                     //new else starts here..
@@ -810,7 +790,6 @@ function createTableForBot(botData) {
                     bootbox.confirm({
                         message: "Are you sure you want to execute this Job?",
                         title: "Confirmation",
-
                         callback: function(result) {
                             if (result) {
                                 var $taskExecuteTabsHeaderContainer = $('#taskExecuteTabsHeader').empty();
@@ -821,8 +800,8 @@ function createTableForBot(botData) {
                                 $modal.find('.outputArea').hide();
                                 $modal.modal('show');
                                 var timestampToPoll = new Date().getTime();
-                                $.post('../tasks/' + taskId + '/run', nexusData, function(data) {
-                                    //  alert(JSON.stringify(data));
+                                $.post('../tasks/' + taskId + '/run', function(data) {
+                                    console.log("Print value of Data here::chef:::"+JSON.stringify(data));
                                     var date = new Date().setTime(data.timestamp);
                                     var taskTimestamp = new Date(date).toLocaleString(); //converts to human readable strings
                                     $('tr[data-taskId="' + taskId + '"] .taskrunTimestamp').html(taskTimestamp);
@@ -830,7 +809,6 @@ function createTableForBot(botData) {
                                         $modal.find('.loadingContainer').hide();
                                         $modal.find('.outputArea').hide();
                                         var $errorContainer = $modal.find('.errorMsgContainer').show();
-
                                         $errorContainer.html($('<span></span>').css({
                                             'color': '#40baf1'
                                         }).append(data.blueprintMessage));
@@ -860,16 +838,11 @@ function createTableForBot(botData) {
                                                         return;
                                                     }
                                                 }
-
                                             }
                                         }
-
                                         return;
-
                                     }
-
                                     showTaskLogs(taskId, data.historyId, true);
-
                                 }).fail(function(jxhr) {
                                     $modal.find('.loadingContainer').hide();
                                     $modal.find('.outputArea').hide();
@@ -938,7 +911,7 @@ function createTableForBot(botData) {
                         }
                         var $tdMessage = $('<td style="width:42%"></td>');
                         $trHistoryRow.append($tdMessage);
-                        if (taskHistories[i].taskType === 'chef') {
+                        if (taskHistories[i].taskType === 'chef' || taskHistories[i].taskType === 'script') {
                             (function($td) {
                                 var message = ' - ';
                                 if (taskHistories[i].nodeIds && taskHistories[i].nodeIds.length == 1) {
@@ -1065,8 +1038,6 @@ function createTableForBot(botData) {
                 });
             });
         } else if (botData.taskType === 'jenkins') {
-            //alert(JSON.stringify(data[i]));
-            //history for jenkins job type...description mentioned above..
             var $tdHistory = $('<td style="vertical-align:inherit;text-align:center;"></td>').append('<a rel="tooltip" data-placement="top" data-original-title="History" data-toggle="modal" data-target="#jenkinsJobHistory" href="javascript:void(0)" class="btn btn-primary btn-sg tableactionbutton"><i class="ace-icon fa fa-header bigger-120"></i></a>');
             $tdHistory.find('a').data('taskId', botData._id).data('autosyncFlag', botData.taskConfig.autoSyncFlag).attr('data-historyTaskId', botData._id).click(function(e) {
                 var taskId = $(this).data('taskId');
@@ -1188,6 +1159,7 @@ function createTableForBot(botData) {
             });
         }
         $tr.append($tdHistory);
+
         var timestamp = "-";
         if (botData.lastRunTimestamp) {
             var date = new Date().setTime(botData.lastRunTimestamp);
@@ -1223,13 +1195,18 @@ function createTableForBot(botData) {
                                 nodeArray.push(nodeInfo.name);
                                 if(taskInfo.taskConfig.nodeIds.length <= jj){
                                     $trInfoRow.append($('<td></td>').append(nodeArray));
+                                    if(taskInfo.taskConfig.runlist && taskInfo.taskConfig.runlist.length){
                                     var runlistArray = [];
                                     for(var ii = 0;ii < taskInfo.taskConfig.runlist.length;ii++){
                                         runlistArray.push(taskInfo.taskConfig.runlist[ii]);
+                                        $trInfoRow.append($('<td></td>').append(runlistArray)); 
                                     }
-                                    $trInfoRow.append($('<td></td>').append(runlistArray));
+                                    }else{
+                                        $trInfoRow.append($('<td></td>').append('-'));
+                                    }    
                                 }
                             }).fail(function(jxhr) {
+                                $trInfoRow.append($('<td></td>').append("-"));
                                 $modal.find('.loadingContainer').hide();
                                 $modal.find('.outputArea').hide();
                                 var $errorContainer = $modal.find('.errorMsgContainer').show();
@@ -1239,7 +1216,8 @@ function createTableForBot(botData) {
                                     $errorContainer.html("Server Behaved Unexpectedly");
                                 }
                             });                            
-                        }                            
+                        }
+                                               
                         $modal.find('.loadingContainer').hide();
                         $modal.find('.outputArea').show();
                         $chefTableInfo.append($trInfoRow);
@@ -1276,7 +1254,6 @@ function createTableForBot(botData) {
                             jenkinServerInfo = JSON.parse(jenkinServerInfo);         
                             for (var pp = 0;pp < jenkinServerInfo.length;pp++) {
                                 var jenkinKeys = Object.keys(jenkinServerInfo[pp]);
-                                console.log(jenkinKeys);
                                 for (var qq = 0;qq < jenkinKeys.length;qq++) {
                                     if (jenkinServerInfo[pp][jenkinKeys[qq]] == taskInfo.taskConfig.jenkinsServerId) {
                                         $trInfoRow.append($('<td></td>').append(jenkinKeys[qq]));
@@ -1422,12 +1399,15 @@ function showTaskLogs(taskId, historyId, isExecuted) {
     var $outputArea = $modal.find('.outputArea').hide().empty();
     $modal.modal('show');
     $.get('/tasks/' + taskId + '/history/' + historyId, function(historyData) {
+        console.log("historyData:"+JSON.stringify(historyData));
         $modal.find('.loadingContainer').hide();
         $modal.find('.errorMsgContainer').hide();
         $outputArea.show();
-
         switch (historyData.taskType) {
             case 'puppet':
+                $outputArea.append(showTaskLogsPC(historyData));
+                break;
+            case 'script':
                 $outputArea.append(showTaskLogsPC(historyData));
                 break;
             case 'chef':
@@ -1633,6 +1613,9 @@ function showTaskCompositeLogs(history, isExecuted) {
                     case 'chef':
                         $logArea.append(showTaskLogsPC(historyData));
                         break;
+                    case 'script':
+                        $logArea.append(showTaskLogsPC(historyData));
+                        break;
                     case 'jenkins':
                         $logArea.append(showTaskJenkinsLogs(historyData, isExecuted));
                         break;
@@ -1652,9 +1635,8 @@ function showTaskCompositeLogs(history, isExecuted) {
     function pollHistory() {
         console.log('composite task ==>' + history._id);
         $.get('/tasks/' + history.taskId + '/history/' + history._id, function(historyData) {
-            var taskHistoryIds = historyData.taskHistoryIds;
-            for (var i = 0; i < taskHistoryIds.length; i++) {
-                createTabs(taskHistoryIds[i].taskId, taskHistoryIds[i].historyId);
+            for (var i = 0; i < historyData.taskHistoryIds.length; i++) {
+                createTabs(historyData.taskHistoryIds[i].taskId, historyData.taskHistoryIds[i].historyId);
             }
             setTimeout(function() {
                 if ($('#assignedExecute').data()['bs.modal'].isShown) {
@@ -1735,6 +1717,7 @@ function pollTaskLogs($tabLink, $tab, timestamp, delay, clearData) {
             } else {
                 console.log('not polling again');
             }
+
         });
     }, delay);
 }
